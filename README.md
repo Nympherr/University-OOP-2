@@ -1,13 +1,18 @@
-# 1-oji užduotis ( versija v.01 )
-***Pati pirmoji objektinio programavimo užduoties versija.***
-
-**Ši versija buvo atlikta dviem būdais:**
-1) naudojant vektorius  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    ( main_vector.cpp )
-2) naudojant tik C masyvus &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ( main.cpp )
+# Versija v0.2
+***Antroji objektinio programavimo užduoties versija.***
 
 **Ką programa daro?**
 
-Apibendrintai ši programa leidžia įrašyti studentus, jų gautus pažymius, egzamino rezultatą ir paskaičiuoti galutinį rezultatą bei jį atvaizduoti vidurkio arba medianos pavidalu
+Programa leidžia įrašyti studentus, jų gautus pažymius, egzamino rezultatą ir paskaičiuoti galutinį rezultatą bei jį atvaizduoti vidurkio arba medianos pavidalu. Galima duomenis įrašyti savarankiškai arba nuskaityti iš failo. Pastaruoju atveju rezultatas bus atvaizduojamas naujame sukurtame faile.
+
+**Kaip programa pasikeitė nuo praeitos versijos?**
+
+1) Atsirado galimybė vartotojui nuskaityti bet kokį failą, vietoj savarankiško įvedimo
+2) Failo nuskaitymo atveju nėra svarbu kiek pažymių vienoje eilutėje bus
+3) Programa failo nuskaitymo atveju sugeneruos naują failą (rezultatas.txt)
+4) Failo nuskaitymo atveju bus matomas galutinis vidurkio rezultatas bei mediana
+5) Pasirinkus savarankišką įvedimą, programa veiks kaip ir V0.1 versijoje
+6) Liko programa versija tik su vektoriais
 
 **Visos funkcijos:**
 
@@ -27,20 +32,16 @@ Apibendrintai ši programa leidžia įrašyti studentus, jų gautus pažymius, e
 
 7) Leidžia vartotojui įvedimo metu nuspręsti kada jis nori baigti darbą
 
-**Patirti sunkumai:**
+8) Vietoj savarankiško duomenų įvedimo galima nuskaityti egzistuojantį failą ir rezultatas atsiras naujame            sugeneruotame faile 
 
-Sunkiausia buvo implementuoti versiją kur nenaudojami vektoriai, nes ten reikėjo, kad iš anksto neapibrėžtas masyvas prireikus didėtų (pointerių pagalba).
+**Patirti sunkumai šioje versijoje:**
 
-**Ką išmokau:**
+Daugiausiai laiko truko sugalvojimas kaip nuskaitytą failo eilutę pertvarkyti taip, kad darbas tolimesnėse operacijose būtų efektyvus ir patogus, galėčiau manipuliuoti tais duomenimis paprastai
 
-1) Pirmą kartą naudojau vektorius
+**Ką išmokau šioje versijoje:**
 
-2) Pirmą kartą panaudojau kitokį(efektyvesnį) atsitiktinių skaičių generavimo būdą
+1) Prisiminiau kaip vyksta darbas su failais (nuskaitymas, įrašymas)
 
-3) Labiau susipažinau kaip yra priimama įvestis, kaip ją valdyti, kad programa visad veiktų kaip pridera
+2) Patobulinau įgudžius su vektoriais (kai manipuliavau failo nuskaitytos eilutės duomenimis)
 
-4) Gilesnis supratimas apie pointerius, jų naudojimą
-
-5) Nemažas dėmesio kreipimas, kad programa neveiktų "bug'ovai" - programos testavimas, klaidų ieškojimas
-
-6) Geriau išmokau problemą išspręsti pirmiausia žodžiu, o vėliau tik pereiti prie kodo
+3) Minimalus susipažinimas su <chrono> biblioteka

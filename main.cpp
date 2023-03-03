@@ -352,52 +352,65 @@ std::string irasymo_pasirinkimas(){
     return ivestis;
 };
 
+bool pavardes_rusiavimas(const studentas& asmuo1, const studentas& asmuo2){
+    return asmuo1.pavarde < asmuo2.pavarde;
+}
+
 void failo_nuskaitymas(){
 
-    std::string ivestis;
-    std::vector<std::string> nuskaityto_failo_duomenys;
+    // Duoda vartotojui pasirinkti failą, kurį jis nori atidaryti
 
-    std::cout << "Irasykite failo pavadinima:";
+    std::cout << "\nIrasykite failo pavadinima:   ";
+    std::string ivestis;
     std::cin >> ivestis;
 
     std::string failo_pavadinimas = "./failai/" + ivestis;
-
-    auto start = std::chrono::high_resolution_clock::now(); auto st=start;
-
     std::ifstream skaitomas_failas(failo_pavadinimas);
 
     while (!skaitomas_failas.is_open()) {
         std::cout << "Tokio failo nera! Pabandykite dar karta!\n";
         std::cin >> ivestis;
+        std::cout << std::endl;
         failo_pavadinimas = "./failai/" + ivestis;
         skaitomas_failas = std::ifstream(failo_pavadinimas);
     };
 
+    // Pradedamas skaičiavimas, kuris parodo kiek laiko truko failo nuskaitymas ir įrašymas
+
+    auto start = std::chrono::high_resolution_clock::now(); auto st=start;
+
     std::string nuskaityta_eilute;
     std::vector<std::string> nuskaitytas_failas;
+
     std::cout << "\nIrasomi duomenys....\n";
+
+    // Skaitoma atidaryto failo kiekviena eilutė
 
     while (std::getline(skaitomas_failas, nuskaityta_eilute)) {
         nuskaitytas_failas.push_back(nuskaityta_eilute);
     };
 
     skaitomas_failas.close();
-
     nuskaitytas_failas.erase(nuskaitytas_failas.begin());
 
-  std::vector<std::vector<std::string>> rezultatas;
+    // Nuskaityti failo duomenys pertvarkomi
+    // (Atskiriami vardai, pavardes, pazymiai, egzaminai)
 
-    for (const std::string& s : nuskaitytas_failas) {
-            std::istringstream iss(s);
-            std::vector<std::string> words;
-            std::string word;
-            while (iss >> word) {
-                words.push_back(word);
+    std::vector<std::vector<std::string>> rezultatas;
+
+    for (const std::string& x : nuskaitytas_failas) {
+
+            std::istringstream neisskaidyta_eilute(x);
+            std::vector<std::string> isskaidyti_zodziai;
+            std::string zodis;
+
+            while (neisskaidyta_eilute >> zodis) {
+                isskaidyti_zodziai.push_back(zodis);
             }
-            rezultatas.push_back(words);
+            rezultatas.push_back(isskaidyti_zodziai);
         }
 
-
+    // Kiekvienoje iteracijoje sukuriamas naujas studento objektas
 
     for(int i = 0; i < rezultatas.size() ; i++){
 
@@ -412,21 +425,34 @@ void failo_nuskaitymas(){
                 asmenys[i].pavarde = rezultatas[i][j];
             }
             else if(j > 1 && j < rezultatas[i].size() - 1){
-                int value = std::stoi(rezultatas[i][j]);
-                asmenys[i].pazymiai.push_back(value);
+                try{
+                    int reiksme = std::stoi(rezultatas[i][j]);
+                    asmenys[i].pazymiai.push_back(reiksme);
+                }
+                catch (const std::invalid_argument& e) {
+                    continue;
+                }
             }
             else if(j == rezultatas[i].size() - 1){
-                int value = std::stoi(rezultatas[i][j]);
-                asmenys[i].egzaminas = value;
+                try{
+                int reiksme = std::stoi(rezultatas[i][j]);
+                asmenys[i].egzaminas = reiksme;
+                }
+                catch (const std::invalid_argument& e) {
+                    continue;
+                }
             }   
         }
         galutinio_balo_skaiciavimas(asmenys[i]);
         medianos_skaiciavimas(asmenys[i]);
     }
 
+    // Duomenu įrašymas į naują failą
+
     std::ofstream rezultatu_failas; 
     rezultatu_failas.open("rezultatas.txt");
 
+    std::sort(asmenys.begin(), asmenys.end(), pavardes_rusiavimas);
 
     if (rezultatu_failas.is_open()) { 
 
@@ -437,8 +463,8 @@ void failo_nuskaitymas(){
 
         for(int x = 0; x < asmenys.size() ; x++){
 
-// "tarpai" kintamieji padaro, kad lygiavimas galutiniame
-// rezultate būtų gražus
+        // "tarpai" kintamieji padaro, kad lygiavimas galutiniame
+        // rezultate būtų gražus
 
             int tarpai_1 = 21 - asmenys[x].pavarde.length();
             int tarpai_2 = 21 - asmenys[x].vardas.length();
@@ -470,15 +496,12 @@ void failo_nuskaitymas(){
     rezultatu_failas.close();
     std::cout << "\nSekmingai irasyta!\n";
 
+    // Parodoma operacijos trukmė vartotojui
 
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff = end-start; // Skirtumas (s)
-    std::cout << "\nFailo nuskaitymas tiesiai į eilučių vektorių užtruko: "<< diff.count() << " s\n";   
-
-
+    std::cout << "\nFailo nuskaitymas tiesiai į eilučių vektorių užtruko: "<< diff.count() << " s\n\n";   
 };
-
-
 
 int main(){
 
@@ -497,7 +520,9 @@ int main(){
 
     else if(vartotojo_pasirinkimas == "failas"){
         failo_nuskaitymas();
+        return 1;
     }
+
     rezultatu_vaizdavimas();
 
     return 1;

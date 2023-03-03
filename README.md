@@ -1,18 +1,25 @@
-# Versija v0.2
-***Antroji objektinio programavimo užduoties versija.***
+# Versija v0.3
+***Trečioji objektinio programavimo užduoties versija.***
 
 **Ką programa daro?**
 
-Programa leidžia įrašyti studentus, jų gautus pažymius, egzamino rezultatą ir paskaičiuoti galutinį rezultatą bei jį atvaizduoti vidurkio arba medianos pavidalu. Galima duomenis įrašyti savarankiškai arba nuskaityti iš failo. Pastaruoju atveju rezultatas bus atvaizduojamas naujame sukurtame faile.
+Programa leidžia įrašyti studentus, jų gautus pažymius, egzamino rezultatą ir paskaičiuoti galutinį rezultatą bei jį atvaizduoti vidurkio arba medianos pavidalu. Galima duomenis įrašyti savarankiškai arba nuskaityti iš failo. Pastaruoju atveju rezultatas bus atvaizduojamas naujai sukurtame faile.
 
-**Kaip programa pasikeitė nuo praeitos versijos?**
+**Kaip programa pasikeitė nuo praeitos versijos?(v0.2 -> v0.3)**
 
-1) Atsirado galimybė vartotojui nuskaityti bet kokį failą, vietoj savarankiško įvedimo
-2) Failo nuskaitymo atveju nėra svarbu kiek pažymių vienoje eilutėje bus
-3) Programa failo nuskaitymo atveju sugeneruos naują failą (rezultatas.txt)
-4) Failo nuskaitymo atveju bus matomas galutinis vidurkio rezultatas bei mediana
-5) Pasirinkus savarankišką įvedimą, programa veiks kaip ir V0.1 versijoje
-6) Liko programa versija tik su vektoriais
+1) Įvykdytas refactoring'as
+1.1) Įdėti apsisaugojimai(try/catch blokai) skaitant failus bei jų turinį
+1.2) Funkcijos, duomenų tipai, bibliotekos perkeltos į antraštinius failus
+1.3) Sukurtas Makefile paprastesniam programos kompiliavimui
+
+Papildomų funkcijų nepridėta
+
+**Kaip paleisti šią programą?**
+
+Pirmiausia, jeigu norėsite skaityti duomenis iš failo, įdėkite tą failą į "failai" direktoriją.
+(Programoje rašant failo pavadinimą, reikia įvesti pilną, pvž studentai10000.txt)
+Kad sukompiliuoti programą su Makefile, rašykite terminale "make". Kad paleistumete programą iš
+terminalo rašykite "./main"
 
 **Visos funkcijos:**
 
@@ -36,12 +43,12 @@ Programa leidžia įrašyti studentus, jų gautus pažymius, egzamino rezultatą
 
 **Patirti sunkumai šioje versijoje:**
 
-Daugiausiai laiko truko sugalvojimas kaip nuskaitytą failo eilutę pertvarkyti taip, kad darbas tolimesnėse operacijose būtų efektyvus ir patogus, galėčiau manipuliuoti tais duomenimis paprastai
+Šioje versijoje viskas vyko sklandžiai, sunkumų nebuvo
 
 **Ką išmokau šioje versijoje:**
 
-1) Prisiminiau kaip vyksta darbas su failais (nuskaitymas, įrašymas)
+1) Prisiminiau antraštinius failus ir kaip juos naudoti
 
-2) Patobulinau įgudžius su vektoriais (kai manipuliavau failo nuskaitytos eilutės duomenimis)
+2) Prisiminiau programos kompiliavimo būdą su "Makefile"
 
-3) Minimalus susipažinimas su <chrono> biblioteka
+3) Truputį patobulinau žinias apie išimčių valdymus (try/catch)

@@ -1,4 +1,4 @@
-// v.01 versijos C masyvo programa (nenaudojami vektoriai)
+// v0.2 versijos programa
 
 #include <iostream>
 #include <algorithm>
@@ -7,12 +7,15 @@
 #include <random>
 #include <string>
 #include <cctype>
+#include <vector>
+#include <fstream>
+#include <chrono>
 
 struct studentas {
 
     std::string vardas;
     std::string pavarde;
-    int* pazymiai;
+    std::vector <int> pazymiai;
     int egzaminas;
     double galutinis_balas;
     double mediana;
@@ -20,11 +23,9 @@ struct studentas {
 };
 
 int mokiniu_dydis = 0;
-int mokiniu_maksimumas = 1;
-studentas* asmenys = new studentas[mokiniu_maksimumas];
+std::vector <studentas> asmenys;
 
-
-int atsitiktiniu_reiksmiu_generavimas(studentas* asmuo){
+void atsitiktiniu_reiksmiu_generavimas(studentas& asmuo){
 
 // Generuojamas atsitiktinis kiekis pažymių(1-40; galima keisti). Bei kiekvienas
 // individualus pažymys. Ir sukuriamas naujas masyvas, kuris būtent atvaizduoja
@@ -36,105 +37,76 @@ int atsitiktiniu_reiksmiu_generavimas(studentas* asmuo){
     std::uniform_int_distribution<> pazymys(1, 10);
 
     int pazymiu_kiekis = atsitiktinis_numeris(eng);
-    asmuo->pazymiai = new int[pazymiu_kiekis];
 
     for(int i =0; i < pazymiu_kiekis;i++){
-        asmuo->pazymiai[i] = pazymys(eng);
+        asmuo.pazymiai.push_back(pazymys(eng));
     }
 
-    asmuo->egzaminas = pazymys(eng);
+    asmuo.egzaminas = pazymys(eng);
 
     std::cout << "Sugeneruoti pazymiai: ";
     for(int j =0; j < pazymiu_kiekis; j++){
-        std::cout << asmuo->pazymiai[j] << " ";
+        std::cout << asmuo.pazymiai[j] << " ";
     }
-    std::cout << "\nSugeneruotas egzamino rezultatas: " << asmuo->egzaminas << "\n";
+    std::cout << "\nSugeneruotas egzamino rezultatas: " << asmuo.egzaminas << "\n";
     std::cout << "-------------------------------------\n\n";
-
-//Gražina masyvo dydį kitoms funkcijoms.
-    return pazymiu_kiekis;
 };
 
-void medianos_skaiciavimas(studentas* asmuo, int pazymiu_skaicius){
+void medianos_skaiciavimas(studentas& asmuo){
 
 // Skaičiuoja medianą iš studento gautų pažymių. Masyvas yra surūšiuojamas didėjimo tvarka
 // ir mediana apskaičiuojama pagal formulę.
-    std::sort(asmuo->pazymiai,asmuo->pazymiai + pazymiu_skaicius);
 
-    if(pazymiu_skaicius % 2 == 1){
-            int indeksas_medianos = (pazymiu_skaicius + 1) / 2;
-            asmuo->mediana = asmuo->pazymiai[indeksas_medianos - 1];
+    std::sort(asmuo.pazymiai.begin(), asmuo.pazymiai.end());
+
+    if(asmuo.pazymiai.size() % 2 == 1){
+            int indeksas_medianos = (asmuo.pazymiai.size() + 1) / 2;
+            asmuo.mediana = asmuo.pazymiai[indeksas_medianos - 1];
     }
     else{
-            int pirmas_vidurinis_skaicius = pazymiu_skaicius / 2 - 1;
-            int antras_vidurinis_skaicius = pazymiu_skaicius / 2;
-            double pazymys_pirmas = asmuo->pazymiai[pirmas_vidurinis_skaicius];
-            double pazymys_antras = asmuo->pazymiai[antras_vidurinis_skaicius];
-            asmuo->mediana = (pazymys_pirmas + pazymys_antras) / 2;
+            int pirmas_vidurinis_skaicius = asmuo.pazymiai.size() / 2 - 1;
+            int antras_vidurinis_skaicius = asmuo.pazymiai.size() / 2;
+            double pazymys_pirmas = asmuo.pazymiai[pirmas_vidurinis_skaicius];
+            double pazymys_antras = asmuo.pazymiai[antras_vidurinis_skaicius];
+            asmuo.mediana = (pazymys_pirmas + pazymys_antras) / 2;
     }
 };
 
-void galutinio_balo_skaiciavimas(studentas* asmuo, int pazymiu_skaicius){
+void galutinio_balo_skaiciavimas(studentas& asmuo){
 
 // Skaičiuoja galutinį balą pagal pažymių vidurkį ir egzamino balą
 
     double vidurkis = 0.0;
     
-    for(int i=0; i < pazymiu_skaicius;i++){
-        vidurkis += asmuo->pazymiai[i];
+    for(int i=0; i < asmuo.pazymiai.size();i++){
+        vidurkis += asmuo.pazymiai[i];
     }
-    vidurkis = vidurkis / pazymiu_skaicius;
+    vidurkis = vidurkis / asmuo.pazymiai.size();
     
-    asmuo->galutinis_balas = (0.4 * vidurkis) + (0.6 * asmuo->egzaminas);
+    asmuo.galutinis_balas = (0.4 * vidurkis) + (0.6 * asmuo.egzaminas);
 };
 
-int pazymiu_suvedimas(studentas* asmuo){
+void pazymiu_suvedimas(studentas& asmuo){
 
-// Leidžia vartotojui savarankiškai įvesti neribotą kiekį pažymių. Pasiekus didžiausią
-// limitą yra sukuriamas didesnis masyvas, senas turinys nukopijuojamas bei ištrinamas
-// senas masyvas
-
-    delete[] asmuo->pazymiai;
-
+// Leidžia vartotojui įvesti neribotą kiekį pažymių.
     int pasirinkimas = 0;
-    int dabartinis_dydis = 0;
-    int maksimalus_dydis = 10;
-    int* pazymiu_masyvas = new int[maksimalus_dydis];
-
 
         while(std::cin >> pasirinkimas){
 
             if(pasirinkimas < 1 || pasirinkimas > 10){
                 std::cout << "Pažymys gali būti tik tarp 1-10!";
             }
-
-            else if(dabartinis_dydis == maksimalus_dydis - 1){
-                int* naujas_pazymiu_masyvas = new int[maksimalus_dydis * 2];
-                std::copy(pazymiu_masyvas, pazymiu_masyvas + maksimalus_dydis, naujas_pazymiu_masyvas);
-                delete[] pazymiu_masyvas;
-                pazymiu_masyvas = naujas_pazymiu_masyvas;
-                maksimalus_dydis *= 2;
-                pazymiu_masyvas[dabartinis_dydis] = pasirinkimas;
-                dabartinis_dydis++;
-
-            }
             else{
-                pazymiu_masyvas[dabartinis_dydis] = pasirinkimas;
-                dabartinis_dydis++;
+                asmuo.pazymiai.push_back(pasirinkimas);
             }
         }
-
-    asmuo->pazymiai = new int[dabartinis_dydis + 1];
-    std::copy(pazymiu_masyvas, pazymiu_masyvas + dabartinis_dydis + 1, asmuo->pazymiai);
-    delete[] pazymiu_masyvas;
-
-    return dabartinis_dydis;
 };
 
-void egzamino_suvedimas(studentas* asmuo){
+void egzamino_suvedimas(studentas& asmuo){
 
 // Leidžia vartotojui įvesti egzamino balą, bei tikrinama, kad įvestis būtų tinkama
 // (pvž. ne raidės)
+
     int pasirinkimas;
     std::cout << "Studento egzamino rezultatas: ";
     std::cin >> pasirinkimas;
@@ -146,11 +118,11 @@ void egzamino_suvedimas(studentas* asmuo){
         egzamino_suvedimas(asmuo);
     }
     else{
-        asmuo->egzaminas = pasirinkimas;
+        asmuo.egzaminas = pasirinkimas;
     }
 };
 
-void duomenu_suvedimas(studentas* asmuo){
+void duomenu_suvedimas(studentas& asmuo){
 
 // Tikrina ar vartotojo vardo įvestis yra iš raidžių ir ar neviršija nurodyto
 // skaitmenų kiekio. Vyksta tol, kol įvestis tenkins sąlygas.
@@ -161,12 +133,12 @@ void duomenu_suvedimas(studentas* asmuo){
     std::cin.clear();
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-    while (!yra_vardas || asmuo->vardas.length() < 1 || asmuo->vardas.length() > 20) {
+    while (!yra_vardas || asmuo.vardas.length() < 1 || asmuo.vardas.length() > 20) {
 
-        std::getline(std::cin, asmuo->vardas);
+        std::getline(std::cin, asmuo.vardas);
         yra_vardas = true;   
 
-        for (char c : asmuo->vardas) {
+        for (char c : asmuo.vardas) {
             if (!std::isalpha(c)) {
                 yra_vardas = false;
                 std::cout << "\nVarda gali sudaryti tik raides!\n";
@@ -174,7 +146,7 @@ void duomenu_suvedimas(studentas* asmuo){
                 break;
             }
         }
-        if(asmuo->vardas.length() < 1 || asmuo->vardas.length() > 20){
+        if(asmuo.vardas.length() < 1 || asmuo.vardas.length() > 20){
             std::cout << "\nVardas gali tureti tik 1-20 raidziu!\n";
             std::cout << "Vardas: ";
         }
@@ -186,12 +158,12 @@ void duomenu_suvedimas(studentas* asmuo){
     std::cout << "Studento pavarde: ";
     bool yra_pavarde = false;
 
-     while (!yra_pavarde || asmuo->pavarde.length() < 1 || asmuo->pavarde.length() > 20) {
+     while (!yra_pavarde || asmuo.pavarde.length() < 1 || asmuo.pavarde.length() > 20) {
 
-        std::getline(std::cin, asmuo->pavarde);
+        std::getline(std::cin, asmuo.pavarde);
         yra_pavarde = true;   
 
-        for (char c : asmuo->pavarde) {
+        for (char c : asmuo.pavarde) {
             if (!std::isalpha(c)) {
                 yra_pavarde = false;
                 std::cout << "\nPavarde gali sudaryti tik raides!\n";
@@ -199,7 +171,7 @@ void duomenu_suvedimas(studentas* asmuo){
                 break;
             }
         }
-        if(asmuo->pavarde.length() < 1 || asmuo->pavarde.length() > 20){
+        if(asmuo.pavarde.length() < 1 || asmuo.pavarde.length() > 20){
             std::cout << "\nPavarde gali tureti tik 1-20 raidziu!\n";
             std::cout << "Pavarde: ";
         }
@@ -218,9 +190,9 @@ void duomenu_suvedimas(studentas* asmuo){
     std::cout << std::endl;
 
     if(ivestis == "random"){
-        int pazymiu_kiekis = atsitiktiniu_reiksmiu_generavimas(asmuo);
-        galutinio_balo_skaiciavimas(asmuo,pazymiu_kiekis);
-        medianos_skaiciavimas(asmuo, pazymiu_kiekis);
+        atsitiktiniu_reiksmiu_generavimas(asmuo);
+        galutinio_balo_skaiciavimas(asmuo);
+        medianos_skaiciavimas(asmuo);
         return;
     }
 
@@ -230,20 +202,20 @@ void duomenu_suvedimas(studentas* asmuo){
     std::cout << "[Spausk raide, kad baigti ivedima]\n";
     std::cout << "Studento pazymiai: ";
 
-    int dabartinis_dydis = pazymiu_suvedimas(asmuo);
-    while(dabartinis_dydis == 0){
+    pazymiu_suvedimas(asmuo);
+    while(asmuo.pazymiai.size() == 0){
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         std::cout << "Turite ivesti bent viena pazymi:";
-        dabartinis_dydis = pazymiu_suvedimas(asmuo);
+        pazymiu_suvedimas(asmuo);
     }
 
 // Rodomi įvesti pažymiai. Kviečiama funkcija, kur reikės įvesti egzamino balą.
 // Bei kviečiamos funkcijos, kur apskaičiuos galutinį balą, bei medianą.
 
     std::cout << "\nIvesti pazymiai: ";
-        for(int t=0;t < dabartinis_dydis; t++){
-            std::cout << asmuo->pazymiai[t] << " ";
+        for(int t=0;t < asmuo.pazymiai.size(); t++){
+            std::cout << asmuo.pazymiai[t] << " ";
         }
 
     std::cout << std::endl;
@@ -251,17 +223,17 @@ void duomenu_suvedimas(studentas* asmuo){
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     egzamino_suvedimas(asmuo);
-    galutinio_balo_skaiciavimas(asmuo,dabartinis_dydis);
-    medianos_skaiciavimas(asmuo, dabartinis_dydis);
+    galutinio_balo_skaiciavimas(asmuo);
+    medianos_skaiciavimas(asmuo);
     std::cout << "-------------------------------------\n\n";
 };
 
-void vidurkio_vaizdavimas(studentas* asmuo, int mokiniu_dydis){
+void vidurkio_vaizdavimas(std::vector<studentas> &asmuo){
     
     std::cout << "\nPavarde              Vardas               Galutinis (Vid.)\n";
     std::cout << "------------------------------------------------------------\n";
 
-    for(int x = 0; x < mokiniu_dydis ; x++){
+    for(int x = 0; x < asmuo.size() ; x++){
 
 // "tarpai" kintamieji padaro, kad lygiavimas galutiniame
 // rezultate būtų gražus
@@ -281,16 +253,15 @@ void vidurkio_vaizdavimas(studentas* asmuo, int mokiniu_dydis){
         }
 
         std::cout << asmuo[x].galutinis_balas << std::endl;
-        delete[] asmuo[x].pazymiai;
     }
     std::cout << "\n";
 }
-void medianos_vaizdavimas(studentas* asmuo, int mokiniu_dydis){
+void medianos_vaizdavimas(std::vector<studentas> &asmuo){
 
     std::cout << "Pavarde              Vardas               Galutinis (Med.)\n";
     std::cout << "------------------------------------------------------------\n";
 
-    for(int x = 0; x < mokiniu_dydis ; x++){
+    for(int x = 0; x < asmuo.size() ; x++){
 
 // "tarpai" kintamieji padaro, kad lygiavimas galutiniame
 // rezultate būtų gražus
@@ -311,7 +282,6 @@ void medianos_vaizdavimas(studentas* asmuo, int mokiniu_dydis){
         }
 
         std::cout << asmuo[x].mediana << std::endl;
-        delete[] asmuo[x].pazymiai;
     }
     std::cout << "\n";
 }
@@ -336,16 +306,16 @@ void rezultatu_vaizdavimas(){
         std::cin >> pasirinkimas;
     }
     if(pasirinkimas == "v"){
-        vidurkio_vaizdavimas(asmenys, mokiniu_dydis);
+        vidurkio_vaizdavimas(asmenys);
     }
     else if(pasirinkimas == "m"){
-        medianos_vaizdavimas(asmenys, mokiniu_dydis);
+        medianos_vaizdavimas(asmenys);
     }
 };
 
 void prideti_mokini(){
 
-// Tikrina vartotojo įvesti ir didina studentų masyvą
+// Tikrina vartotojo įvestį ir didina studentų masyvą
 // jeigu vartotojas nori pridėti naują įrašą
 
     std::string ivestis;
@@ -358,34 +328,177 @@ void prideti_mokini(){
         [](unsigned char c){ return std::tolower(c); });
 
         if(ivestis == "t"){
-            if(mokiniu_dydis == mokiniu_maksimumas){
-                    studentas* naujas_mokiniu_masyvas = new studentas[mokiniu_maksimumas + 1];
-                    std::copy(asmenys, asmenys + mokiniu_maksimumas, naujas_mokiniu_masyvas);
-                    delete[] asmenys;
-                    asmenys = naujas_mokiniu_masyvas;
-                    mokiniu_maksimumas++;
-            }
-        
+            asmenys.push_back(studentas());
+            duomenu_suvedimas(asmenys[mokiniu_dydis]);
             mokiniu_dydis++;
-            duomenu_suvedimas(&asmenys[mokiniu_dydis - 1]);
         }
     }while(ivestis == "t");
 };
+
+std::string irasymo_pasirinkimas(){
+
+    std::string ivestis;
+
+    std::cout << "Ar norite nuskaityti duomenis is failo ar irasyti savarankiskai?\n";
+    std::cout << "[failas] - Failo nuskaitymas       [sav] - Savarankiskai\n";
+
+    std::cin >> ivestis;
+    while(ivestis != "failas" && ivestis != "sav"){
+        std::cout<< "Galite pasirinkti tik [failas] arba [sav]!\n";
+        std::cin >> ivestis;
+        std::cout << std::endl;
+    }
+
+    return ivestis;
+};
+
+void failo_nuskaitymas(){
+
+    std::string ivestis;
+    std::vector<std::string> nuskaityto_failo_duomenys;
+
+    std::cout << "Irasykite failo pavadinima:";
+    std::cin >> ivestis;
+
+    std::string failo_pavadinimas = "./failai/" + ivestis;
+
+    auto start = std::chrono::high_resolution_clock::now(); auto st=start;
+
+    std::ifstream skaitomas_failas(failo_pavadinimas);
+
+    while (!skaitomas_failas.is_open()) {
+        std::cout << "Tokio failo nera! Pabandykite dar karta!\n";
+        std::cin >> ivestis;
+        failo_pavadinimas = "./failai/" + ivestis;
+        skaitomas_failas = std::ifstream(failo_pavadinimas);
+    };
+
+    std::string nuskaityta_eilute;
+    std::vector<std::string> nuskaitytas_failas;
+    std::cout << "\nIrasomi duomenys....\n";
+
+    while (std::getline(skaitomas_failas, nuskaityta_eilute)) {
+        nuskaitytas_failas.push_back(nuskaityta_eilute);
+    };
+
+    skaitomas_failas.close();
+
+    nuskaitytas_failas.erase(nuskaitytas_failas.begin());
+
+  std::vector<std::vector<std::string>> rezultatas;
+
+    for (const std::string& s : nuskaitytas_failas) {
+            std::istringstream iss(s);
+            std::vector<std::string> words;
+            std::string word;
+            while (iss >> word) {
+                words.push_back(word);
+            }
+            rezultatas.push_back(words);
+        }
+
+
+
+    for(int i = 0; i < rezultatas.size() ; i++){
+
+        asmenys.push_back(studentas());
+    
+        for(int j = 0; j < rezultatas[i].size() ; j++){
+        
+            if(j == 0){
+                asmenys[i].vardas = rezultatas[i][j];
+            }
+            else if(j == 1){
+                asmenys[i].pavarde = rezultatas[i][j];
+            }
+            else if(j > 1 && j < rezultatas[i].size() - 1){
+                int value = std::stoi(rezultatas[i][j]);
+                asmenys[i].pazymiai.push_back(value);
+            }
+            else if(j == rezultatas[i].size() - 1){
+                int value = std::stoi(rezultatas[i][j]);
+                asmenys[i].egzaminas = value;
+            }   
+        }
+        galutinio_balo_skaiciavimas(asmenys[i]);
+        medianos_skaiciavimas(asmenys[i]);
+    }
+
+    std::ofstream rezultatu_failas; 
+    rezultatu_failas.open("rezultatas.txt");
+
+
+    if (rezultatu_failas.is_open()) { 
+
+            rezultatu_failas << "Pavarde              Vardas               Galutinis (Vid.)        Galutinis (Med.)\n";
+            
+            rezultatu_failas << "-----------------------------------------------------------------------------------------\n";
+
+
+        for(int x = 0; x < asmenys.size() ; x++){
+
+// "tarpai" kintamieji padaro, kad lygiavimas galutiniame
+// rezultate būtų gražus
+
+            int tarpai_1 = 21 - asmenys[x].pavarde.length();
+            int tarpai_2 = 21 - asmenys[x].vardas.length();
+
+            rezultatu_failas << std::fixed << std::setprecision(2);
+
+            rezultatu_failas << asmenys[x].pavarde;
+            for(int i = 0; i < tarpai_1; i++){
+                rezultatu_failas << " ";
+            }
+
+            rezultatu_failas << asmenys[x].vardas;
+            for(int j = 0; j < tarpai_2; j++){
+            rezultatu_failas << " ";
+            }
+
+            rezultatu_failas << asmenys[x].galutinis_balas;
+            for(int j = 0; j < 20; j++){
+            rezultatu_failas << " ";
+
+            }
+            rezultatu_failas << asmenys[x].mediana << std::endl;
+        }
+    }
+    else {
+        std::cout << "Ivyko klaida\n";
+    }
+
+    rezultatu_failas.close();
+    std::cout << "\nSekmingai irasyta!\n";
+
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> diff = end-start; // Skirtumas (s)
+    std::cout << "\nFailo nuskaitymas tiesiai į eilučių vektorių užtruko: "<< diff.count() << " s\n";   
+
+
+};
+
+
 
 int main(){
 
 // Programos paleidimas
 
-    do{
-        prideti_mokini();
-        if(mokiniu_dydis == 0){
-            std::cout << "\nTurite ivesti bent viena mokini!\n\n";
-        }
-    }while(mokiniu_dydis == 0);
+    std::string vartotojo_pasirinkimas = irasymo_pasirinkimas();
 
+    if(vartotojo_pasirinkimas == "sav"){
+        do{
+            prideti_mokini();
+            if(asmenys.size() == 0){
+                std::cout << "\nTurite ivesti bent viena mokini!\n\n";
+            }
+    }while(asmenys.size() == 0);
+    }
+
+    else if(vartotojo_pasirinkimas == "failas"){
+        failo_nuskaitymas();
+    }
     rezultatu_vaizdavimas();
-
-    delete[] asmenys;
 
     return 1;
 };

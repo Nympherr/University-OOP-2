@@ -19,7 +19,7 @@ Papildomų funkcijų nepridėta
 
 **Kaip paleisti šią programą?**
 
-Pirmiausia, jeigu norėsite skaityti duomenis iš failo, įdėkite tą failą į "failai" direktoriją.
+Pirmiausia, jeigu norėsite skaityti duomenis iš failo, sukurkite "failai" direktoriją ir įdėkite duomenų failą tenais.
 (Programoje rašant failo pavadinimą, reikia įvesti pilną, pvž studentai10000.txt)
 Kad sukompiliuoti programą su Makefile, rašykite terminale "make". Kad paleistumete programą iš
 terminalo rašykite "./main"

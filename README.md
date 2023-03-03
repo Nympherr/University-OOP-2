@@ -8,8 +8,11 @@ Programa leidžia įrašyti studentus, jų gautus pažymius, egzamino rezultatą
 **Kaip programa pasikeitė nuo praeitos versijos?(v0.2 -> v0.3)**
 
 1) Įvykdytas refactoring'as
+
 1.1) Įdėti apsisaugojimai(try/catch blokai) skaitant failus bei jų turinį
+
 1.2) Funkcijos, duomenų tipai, bibliotekos perkeltos į antraštinius failus
+
 1.3) Sukurtas Makefile paprastesniam programos kompiliavimui
 
 Papildomų funkcijų nepridėta

@@ -38,5 +38,6 @@ void prideti_mokini();
 std::string irasymo_pasirinkimas();
 bool pavardes_rusiavimas(const studentas& asmuo1, const studentas& asmuo2);
 void failo_nuskaitymas();
+void failo_sukurimas();
 
 #endif

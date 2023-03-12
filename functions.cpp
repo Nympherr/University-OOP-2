@@ -317,14 +317,21 @@ void prideti_mokini(){
 
 std::string irasymo_pasirinkimas(){
 
+    std::cout << "\n----------------------------------\n";
+    std::cout << "         PROGRAMOS PRADŽIA\n";
+    std::cout << "----------------------------------\n\n";
+
+    std::cout << "Pasirinkite norimą operaciją:\n";
+    std::cout << "1 - Duomenų įvedimas savarankiškai\n";
+    std::cout << "2 - Duomenų nuskaitymas iš failo\n";
+    std::cout << "3 - Naujo failo sugeneravimas\n";
+    std::cout << "\nJūsų pasirinkimas:  ";
+
     std::string ivestis;
-
-    std::cout << "Ar norite nuskaityti duomenis is failo ar irasyti savarankiskai?\n";
-    std::cout << "[failas] - Failo nuskaitymas       [sav] - Savarankiskai\n";
-
     std::cin >> ivestis;
-    while(ivestis != "failas" && ivestis != "sav"){
-        std::cout<< "Galite pasirinkti tik [failas] arba [sav]!\n";
+    while(ivestis != "1" && ivestis != "2" && ivestis != "3"){
+        std::cout<< "\nGalite pasirinkti tik [1], [2] arba [3]!\n";
+        std::cout<< "Jūsų pasirinkimas:  ";
         std::cin >> ivestis;
         std::cout << std::endl;
     }
@@ -493,4 +500,52 @@ void failo_nuskaitymas(){
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff = end-start; // Skirtumas (s)
     std::cout << "\nOperacija užtruko: "<< diff.count() << " s\n\n";   
+};
+
+void failo_sukurimas(){
+
+    std::random_device rd;
+    std::mt19937 eng(rd());
+    std::uniform_int_distribution<> pazymys(1, 10);
+    int studentu_skaicius;
+    int pazymiu_skaicius;
+
+    std::cout << "\nKiek studentų turėtų būti faile?\n";
+    std::cout << "Studentų skaičius:  ";
+
+    std::cin >> studentu_skaicius;
+    while(studentu_skaicius < 1 || studentu_skaicius > 10000000){
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "\nStudentų skaičius gali būti tik tarp 1-10000000!\n";
+        std::cout << "Studentų skaičius:  ";
+        std::cin >> studentu_skaicius;
+    }
+
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    std::cout << "\nKiek pažymių turės kiekvienas studentas?\n";
+    std::cout << "Pažymių skaičius:  ";
+
+    std::cin >> pazymiu_skaicius;
+    while(pazymiu_skaicius < 1 || pazymiu_skaicius > 20){
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "\nPažymių skaičius gali būti tik tarp 1-20!\n";
+        std::cout << "Pažymių skaičius:  ";
+        std::cin >> pazymiu_skaicius;
+    }
+    pazymiu_skaicius++;
+
+    std::vector<int*>pazymiai(studentu_skaicius);
+
+    for(int i =0; i < studentu_skaicius; i++){
+        pazymiai[i] = new int[pazymiu_skaicius];
+        for(int j=0; j < pazymiu_skaicius; j++){
+            pazymiai[i][j] = pazymys(eng);
+        }
+    }
+
+    
 };

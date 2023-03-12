@@ -343,6 +343,10 @@ bool pavardes_rusiavimas(const studentas& asmuo1, const studentas& asmuo2){
     return asmuo1.pavarde < asmuo2.pavarde;
 };
 
+bool galutinio_balo_rusiavimas(const studentas& asmuo1, const studentas& asmuo2){
+    return asmuo1.galutinis_balas > asmuo2.galutinis_balas;
+};
+
 void failo_nuskaitymas(){
 
     // Duoda vartotojui pasirinkti failą, kurį jis nori atidaryti
@@ -462,29 +466,11 @@ void failo_nuskaitymas(){
 
         for(int x = 0; x < asmenys.size() ; x++){
 
-        // "tarpai" kintamieji padaro, kad lygiavimas galutiniame
-        // rezultate būtų gražus
-
-            int tarpai_1 = 21 - asmenys[x].pavarde.length();
-            int tarpai_2 = 21 - asmenys[x].vardas.length();
-
             rezultatu_failas << std::fixed << std::setprecision(2);
 
-            rezultatu_failas << asmenys[x].pavarde;
-            for(int i = 0; i < tarpai_1; i++){
-                rezultatu_failas << " ";
-            }
-
-            rezultatu_failas << asmenys[x].vardas;
-            for(int j = 0; j < tarpai_2; j++){
-            rezultatu_failas << " ";
-            }
-
-            rezultatu_failas << asmenys[x].galutinis_balas;
-            for(int j = 0; j < 20; j++){
-            rezultatu_failas << " ";
-
-            }
+            rezultatu_failas << std::setw(21) << std::left << asmenys[x].pavarde;
+            rezultatu_failas << std::setw(21) << std::left << asmenys[x].vardas;
+            rezultatu_failas << std::setw(24) << std::left << asmenys[x].galutinis_balas;
             rezultatu_failas << asmenys[x].mediana << std::endl;
         }
     }
@@ -502,14 +488,103 @@ void failo_nuskaitymas(){
     std::cout << "\nOperacija užtruko: "<< diff.count() << " s\n\n";   
 };
 
-void failo_sukurimas(){
+void failo_irasymas_paprastai(std::string failo_pavadinimas,std::vector<studentas> sarasas){
 
-    std::random_device rd;
-    std::mt19937 eng(rd());
-    std::uniform_int_distribution<> pazymys(1, 10);
+    std::ofstream rezultatu_failas; 
+    rezultatu_failas.open(failo_pavadinimas);
+    std::sort(sarasas.begin(), sarasas.end(), galutinio_balo_rusiavimas);
+
+    rezultatu_failas << "Pavarde              Vardas               Galutinis (Vid.)        Galutinis (Med.)\n";
+    rezultatu_failas << "-----------------------------------------------------------------------------------------\n";
+
+    for(int x = 0; x < sarasas.size() ; x++){
+
+        rezultatu_failas << std::fixed << std::setprecision(2);
+
+        rezultatu_failas << std::setw(21) << std::left << sarasas[x].pavarde;
+        rezultatu_failas << std::setw(21) << std::left << sarasas[x].vardas;
+        rezultatu_failas << std::setw(24) << std::left << sarasas[x].galutinis_balas;
+        rezultatu_failas << sarasas[x].mediana << std::endl;
+    }
+
+    rezultatu_failas.close();
+};
+
+void failo_studento_nuskaitymas(std::string failo_pavadinimas){
+
+    std::ifstream skaitomas_failas;
+    skaitomas_failas.open(failo_pavadinimas);
+
+    std::string nuskaityta_eilute;
+    std::vector<std::string> nuskaitytas_failas;
+
+    // Skaitoma atidaryto failo kiekviena eilutė
+
+    while (std::getline(skaitomas_failas, nuskaityta_eilute)) {
+        nuskaitytas_failas.push_back(nuskaityta_eilute);
+    };
+
+    skaitomas_failas.close();
+    nuskaitytas_failas.erase(nuskaitytas_failas.begin());
+
+    // Nuskaityti failo duomenys pertvarkomi
+    // (Atskiriami vardai, pavardes, pazymiai, egzaminai)
+
+    std::vector<std::vector<std::string>> rezultatas;
+
+    for (const std::string& x : nuskaitytas_failas) {
+
+            std::istringstream neisskaidyta_eilute(x);
+            std::vector<std::string> isskaidyti_zodziai;
+            std::string zodis;
+
+            while (neisskaidyta_eilute >> zodis) {
+                isskaidyti_zodziai.push_back(zodis);
+            }
+            rezultatas.push_back(isskaidyti_zodziai);
+        }
+
+    // Kiekvienoje iteracijoje sukuriamas naujas studento objektas
+
+    for(int i = 0; i < rezultatas.size() ; i++){
+
+        asmenys.push_back(studentas());
+    
+        for(int j = 0; j < rezultatas[i].size() ; j++){
+        
+            if(j == 0){
+                asmenys[i].vardas = rezultatas[i][j];
+            }
+            else if(j == 1){
+                asmenys[i].pavarde = rezultatas[i][j];
+            }
+            else if(j > 1 && j < rezultatas[i].size() - 1){
+                try{
+                    int reiksme = std::stoi(rezultatas[i][j]);
+                    asmenys[i].pazymiai.push_back(reiksme);
+                }
+                catch (const std::invalid_argument& e) {
+                    continue;
+                }
+            }
+            else if(j == rezultatas[i].size() - 1){
+                try{
+                int reiksme = std::stoi(rezultatas[i][j]);
+                asmenys[i].egzaminas = reiksme;
+                }
+                catch (const std::invalid_argument& e) {
+                    asmenys[i].egzaminas = 0;
+                }
+            }   
+        }
+        galutinio_balo_skaiciavimas(asmenys[i]);
+        medianos_skaiciavimas(asmenys[i]);
+    }
+};
+
+int failo_studentu_nustatymas(){
+
     int studentu_skaicius;
-    int pazymiu_skaicius;
-
     std::cout << "\nKiek studentų turėtų būti faile?\n";
     std::cout << "Studentų skaičius:  ";
 
@@ -524,9 +599,17 @@ void failo_sukurimas(){
 
     std::cin.clear();
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    return studentu_skaicius;
+}
 
+int failo_pazymiu_nustatymas(){
+
+    int pazymiu_skaicius;
     std::cout << "\nKiek pažymių turės kiekvienas studentas?\n";
     std::cout << "Pažymių skaičius:  ";
+
+    // Galime nustatyti kiek norima turėti pažymių
+    // Apsisaugo, kad nebūtų pvž. 1000000
 
     std::cin >> pazymiu_skaicius;
     while(pazymiu_skaicius < 1 || pazymiu_skaicius > 20){
@@ -537,8 +620,32 @@ void failo_sukurimas(){
         std::cin >> pazymiu_skaicius;
     }
     
-    pazymiu_skaicius++;
+    // didinam pažymių skaičių, nes egzaminas irgi įskaitytas
+
+    return pazymiu_skaicius + 1;
+}
+
+void failo_sukurimas(){
+
+    // Atsitiktinis skaičių generavimas pažymiams
+    // Kviečiame funkcijas, kur gauname iš vartotojo
+    // kokio dydžio failo jis nori ir kiek pažymių kiekvienas
+    // studentas turės
+
+    std::random_device rd;
+    std::mt19937 eng(rd());
+    std::uniform_int_distribution<> pazymys(1, 10);
+    int studentu_skaicius = failo_studentu_nustatymas();
+    int pazymiu_skaicius = failo_pazymiu_nustatymas();
     int eilutes_ilgis = pazymiu_skaicius + 2;
+
+    std::cout << "\n---------------- Irasomi duomenys.... ----------------\n";
+
+    // Pradedamas skaičiuoti programos spartos laikas
+
+    auto start = std::chrono::high_resolution_clock::now(); auto st=start;
+
+    // Sukuria vektorių, kuriame bus saugomi atsitiktiniai pažymiai
 
     std::vector<int*>pazymiai(studentu_skaicius);
 
@@ -549,20 +656,11 @@ void failo_sukurimas(){
         }
     }
 
-    std::string studentu_skaicius_string = std::to_string(studentu_skaicius);
-    std::string naujo_failo_pavadinimas = "./failai/studentai" + studentu_skaicius_string + ".txt";
+    // Darbas su failais. Sukuria naują failą į "failai" direktoriją.
+    // Pirmas for ciklas skirtas failo antraštei, o kitas for ciklas
+    // jau įrašo vartotojo norimą įrašų kiekį su pažymiais
 
-    std::string antrastine_eilute[pazymiu_skaicius];
-    for(int i = 1; i < pazymiu_skaicius + 1; i++){
-        std::string temp = std::to_string(i);
-        if(i==pazymiu_skaicius){
-            antrastine_eilute[i - 1] = "Egz.";
-        }
-        else{
-            antrastine_eilute[i - 1] = "ND" + temp;
-        }
-    }
-
+    std::string naujo_failo_pavadinimas = "./failai/studentai" + std::to_string(studentu_skaicius) + ".txt";
     std::ofstream kuriamas_failas(naujo_failo_pavadinimas);
 
     for(int i = 0; i < eilutes_ilgis; i++){
@@ -573,10 +671,10 @@ void failo_sukurimas(){
             kuriamas_failas << std::setw(25) << std::left << "Pavarde";
         }
         else if(i== eilutes_ilgis - 1){
-            kuriamas_failas << antrastine_eilute[i - 2] << std::endl;
+            kuriamas_failas << "Egz."<< std::endl;
         }
         else{
-            kuriamas_failas << std::setw(10) << std::left << antrastine_eilute[i - 2];
+            kuriamas_failas << std::setw(10) << std::left << "ND" + std::to_string(i - 1);
         }
     }
 
@@ -597,11 +695,62 @@ void failo_sukurimas(){
         }
     }
 
+    // Ištrina rodykles ir patį vektorių, kuris buvo sukurtas atsitiktiniams
+    // pažymiams saugoti
+
     for(int i =0; i < studentu_skaicius; i++){
     delete[] pazymiai[i];
     }
     pazymiai.clear();
 
+    // Baigėsi darbas su failais ir jį uždarome
+
     kuriamas_failas.close();
 
+    // Kviečiam funkciją, kuri nuskaitys šį failą ir studentus sudės į bendrą vektorių.
+
+    failo_studento_nuskaitymas(naujo_failo_pavadinimas);
+
+    // Iš bendro studentų vektoriaus, studentai yra surūšiuojami pagal galutinį balą
+    // ir įrašomi į jiems skirtus vektorius
+
+    std::vector<studentas> asmenys_vargsiukai;
+    std::vector<studentas> asmenys_kietakai;
+
+    for(int i =0; i < asmenys.size();i++){
+        if(asmenys[i].galutinis_balas >= 5.0){
+            asmenys_kietakai.push_back(asmenys[i]);
+        }
+        else{
+            asmenys_vargsiukai.push_back(asmenys[i]);
+        }
+    }
+
+    // ištrina bendrą vektorių, kadangi nebenaudojame
+
+    for(int i = 0; i < asmenys.size();i++){
+        asmenys[i].pazymiai.clear();
+    }
+    asmenys.clear();
+
+    // Sukuria du naujus failus su atrūšiuotais studentais
+
+    failo_irasymas_paprastai("vargsiukai.txt",asmenys_vargsiukai);
+    failo_irasymas_paprastai("kietakai.txt",asmenys_kietakai);
+
+    for(int i = 0; i < asmenys_vargsiukai.size();i++){
+    asmenys_vargsiukai[i].pazymiai.clear();
+    }
+    asmenys_vargsiukai.clear();
+
+    for(int i = 0; i < asmenys_kietakai.size();i++){
+    asmenys_kietakai[i].pazymiai.clear();
+    }
+    asmenys_kietakai.clear();
+
+    std::cout << "\nFailai sėkmingai sukurti!\n";
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> diff = end-start; // Skirtumas (s)
+    std::cout << "\nOperacija užtruko: "<< diff.count() << " s\n\n";   
 };

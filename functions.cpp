@@ -536,7 +536,9 @@ void failo_sukurimas(){
         std::cout << "Pažymių skaičius:  ";
         std::cin >> pazymiu_skaicius;
     }
+    
     pazymiu_skaicius++;
+    int eilutes_ilgis = pazymiu_skaicius + 2;
 
     std::vector<int*>pazymiai(studentu_skaicius);
 
@@ -547,5 +549,59 @@ void failo_sukurimas(){
         }
     }
 
-    
+    std::string studentu_skaicius_string = std::to_string(studentu_skaicius);
+    std::string naujo_failo_pavadinimas = "./failai/studentai" + studentu_skaicius_string + ".txt";
+
+    std::string antrastine_eilute[pazymiu_skaicius];
+    for(int i = 1; i < pazymiu_skaicius + 1; i++){
+        std::string temp = std::to_string(i);
+        if(i==pazymiu_skaicius){
+            antrastine_eilute[i - 1] = "Egz.";
+        }
+        else{
+            antrastine_eilute[i - 1] = "ND" + temp;
+        }
+    }
+
+    std::ofstream kuriamas_failas(naujo_failo_pavadinimas);
+
+    for(int i = 0; i < eilutes_ilgis; i++){
+        if(i==0){
+            kuriamas_failas << std::setw(25) << std::left << "Vardas";
+        }
+        else if(i==1){
+            kuriamas_failas << std::setw(25) << std::left << "Pavarde";
+        }
+        else if(i== eilutes_ilgis - 1){
+            kuriamas_failas << antrastine_eilute[i - 2] << std::endl;
+        }
+        else{
+            kuriamas_failas << std::setw(10) << std::left << antrastine_eilute[i - 2];
+        }
+    }
+
+    for(int i = 0; i < studentu_skaicius; i++){
+        for(int j=0; j < eilutes_ilgis; j++){
+            if(j==0){
+            kuriamas_failas << std::setw(25) << std::left << "Vardas" + std::to_string(i+1);
+            }
+            else if(j==1){
+            kuriamas_failas << std::setw(25) << std::left << "Pavarde" + std::to_string(i+1);
+            }
+            else if(j== eilutes_ilgis - 1){
+            kuriamas_failas << pazymiai[i][j - 2] << std::endl;
+            }
+            else{
+            kuriamas_failas << std::setw(10) << std::left << pazymiai[i][j - 2];
+            }
+        }
+    }
+
+    for(int i =0; i < studentu_skaicius; i++){
+    delete[] pazymiai[i];
+    }
+    pazymiai.clear();
+
+    kuriamas_failas.close();
+
 };

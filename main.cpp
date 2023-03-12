@@ -2,7 +2,7 @@
 
 #include "functions.h"
 
-int main(){
+int main(){                                                                                                     
 
 // Programos paleidimas
 

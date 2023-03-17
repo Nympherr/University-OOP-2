@@ -39,10 +39,10 @@ void prideti_mokini();
 std::string irasymo_pasirinkimas();
 bool pavardes_rusiavimas(const studentas& asmuo1, const studentas& asmuo2);
 bool galutinio_balo_rusiavimas(const studentas& asmuo1, const studentas& asmuo2);
-void failo_nuskaitymas();
 void failo_studento_nuskaitymas();
+void failo_nuskaitymas();
 int failo_studentu_nustatymas();
 int failo_pazymiu_nustatymas();
 void failo_sukurimas();
-
+void programos_pradzia();
 #endif

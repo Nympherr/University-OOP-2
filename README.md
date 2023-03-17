@@ -1,4 +1,4 @@
-# Versija v0.4
+# Versija v0.4.1
 ***Ketvirtoji objektinio programavimo užduoties versija.***
 
 <h2>Ką programa daro?</h2>
@@ -15,9 +15,9 @@ Programa leidžia įrašyti studentus, jų gautus pažymius, egzamino rezultatą
 3) Įdėtas funkcijų veikimo laikas
 (Generuojant naują failą vartotojui bus matyti kiek laiko užtruko kiekviena operacija, pvž. naujo failo sukūrimo, jo apdorojimas ir t.t.)
 
-4) Su nauju sugeneruotu failu studentai pagal galutinį pažymį bus padalinami į dvi grupes ir išvedami į 2 naujus atskirus failus. Tuose failuose jie yra surūšiuoti diėjimo tvarka pagal pažymį
+4) Nuskaitant failą studentai pagal galutinį pažymį bus padalinami į dvi grupes ir išvedami į 2 naujus atskirus failus. Tuose failuose jie yra surūšiuoti diėjimo tvarka pagal pažymį
 
-5) Duomenų nuskaitymui iš failo ir savarankiškam įvedinėjimui žymių pakitimų nebuvo. Tik truputį optimizuotas kodas.
+5)Nuskaitant failą nebebus išvedamas rezultatai.txt failas
 
 <h2>Kaip paleisti šią programą?</h2>
 

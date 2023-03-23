@@ -1,30 +1,29 @@
-# Versija v0.4.1
-***Ketvirtoji objektinio programavimo užduoties versija.***
+# Versija v0.5
+***Penktoji objektinio programavimo užduoties versija.***
 
 <h2>Ką programa daro?</h2>
 
-Programa leidžia įrašyti studentus, jų gautus pažymius, egzamino rezultatą ir paskaičiuoti galutinį rezultatą bei jį atvaizduoti vidurkio arba medianos pavidalu. Galima duomenis įrašyti savarankiškai arba nuskaityti iš failo. Yra galimybė sugeneruoti failą nuo nulio pagal savo pasirinktus parametrus/
+Programa leidžia įrašyti studentus, jų gautus pažymius, egzamino rezultatą ir paskaičiuoti galutinį rezultatą bei jį atvaizduoti vidurkio arba medianos pavidalu. Galima duomenis įrašyti savarankiškai arba nuskaityti iš failo. Yra galimybė sugeneruoti failą nuo nulio pagal savo pasirinktus parametrus.
 
-<h2>Kaip programa pasikeitė nuo praeitos versijos?(v0.3 -> v0.4)</h2>
+<h2>Kaip programa pasikeitė nuo praeitos versijos?(v0.4 -> v0.5)</h2>
 
-1) Įdėta galimybė sugeneruoti naują studentų failą pagal norimą dydį
-(Sugeneruos atsitiktinius pažymius, egzamino balą, vardai prasidės vardas1, vardas2 ir t.t.)
+Programa veikia lygiai taip pat kaip ir V0.4 versijoje, jokių naujų funkcijų neatsirado. Pagrindinis pasikeitimas, kad atsirado 3-ys skirtingi projektai (main_vector.cpp main_list.cpp ir main_deque.cpp), kad būtų galimybė ištestuoti programos vykdymo laiką, kai yra naudojami skirtingi
+konteineriai. Vienose versijose kodas gali truputį skirtis nuo kitų, tai buvo reikalinga padaryti, kad būtų galimybė naudoti  būtent tą konteinerį arba, kad paoptimizuoti kodą.
 
-2) Patobulintas Makefile(su "make rez" komanda terminale ištrins direktorijoje visus .txt failus)
-
-3) Įdėtas funkcijų veikimo laikas
-(Generuojant naują failą vartotojui bus matyti kiek laiko užtruko kiekviena operacija, pvž. naujo failo sukūrimo, jo apdorojimas ir t.t.)
-
-4) Nuskaitant failą studentai pagal galutinį pažymį bus padalinami į dvi grupes ir išvedami į 2 naujus atskirus failus. Tuose failuose jie yra surūšiuoti diėjimo tvarka pagal pažymį
-
-5)Nuskaitant failą nebebus išvedamas rezultatai.txt failas
 
 <h2>Kaip paleisti šią programą?</h2>
 
-Pirmiausia, jeigu norėsite skaityti duomenis iš failo, sukurkite "failai" direktoriją ir įdėkite duomenų failą tenais.
-(Programoje rašant failo pavadinimą, reikia įvesti pilną, pvž studentai10000.txt)
-Kad sukompiliuoti programą su Makefile, rašykite terminale "make". Kad paleistumete programą iš
-terminalo rašykite "./main"
+Kad sukurti programos paleidžiamąjį failą su makeFile terminale įrašykite: (pagal pasirinkimą)
+
+1) make (versija su vektoriais)
+2) make list (versija su list'ais)
+3) make deque (versija su dekais)
+
+Kad paleisti tą failą, terminale įrašykite: (pagal pasirinkimą)
+
+1) ./main_vector (versija su vektoriais)
+2) ./main_list (versija su list'ais)
+3) ./main_deque (versija su dekais)
 
 <h2>Visos funkcijos:</h2>
 
@@ -50,31 +49,45 @@ terminalo rašykite "./main"
 
 <h2>Patirti sunkumai šioje versijoje:</h2>
 
-Iššūkis buvo bandyti optimizuoti kodą. Kažkiek pavyko nors ir ne pilnai. Sukurti funkciją, kuri generuotų naujus failus nebuvo labai sudėtinga.
+Sunkumų didelių nepatyriau, reikėjo pasidomėti apie std::list, kad galėčiau tinkamai implementuoti vietoj std::vector konteinerio. Buvo nesklandumų su std::deque, nes  vykdymo laikas truko labai daug laiko, reikėjo truputį paoptimizuoti kodą, bet ir galutiniame rezultate jis yra lėčiausias ir nelabai efektyvus.
 
 <h2>Ką išmokau šioje versijoje:</h2>
 
-1) Išmokau daugiau apie failų įrašinėjimą, naujų failų generavimą.
+1) Išmokau apie std::list bei apie list'us apskritai, gavau bazinį supratimą kaip jie veikia ir kaip tinkamai naudoti, kuom jų implementacija skiriasi nuo std::vector.
 
-2) Sužinojau ką reiškia blogai optimizuotas kodas ir gerai optimizuotas kodas ir veiksniai, kurie tai lemia
-(pvž. bufferio naudojimas vietoj eilučių skaitymo arba iš pradžių visų duomenų įrašymas į string ir tik po to tą string įrašyti į failą vietoj įrašinėjimo į failą eilute po eilute)
-(taip pat savo kompiuterio resursų naudojimas, kaip operatyvios atminties, kad kodas veiktų efektyviau)
-
-3) std::setw ir std::left kai bandoma gražiai sulygiuoti informaciją faile
-
+2) Su std::deque versija ir dideliu įrašų kiekiu programa kartais nulūždavo. Teko daugiau pagalvoti apie optimizavimą, kaip mano kompiuterio resursai yra naudojami, kodėl taip atsitinka.
 
 <br>
 
-<h2>Programos veikimo laikai:</h2>
+<h2>Mano kompiuterio specifikacijos:</h2>
 
+Procesorius: Intel® Core™ i7-8550U ; Branduoliai: 4 (loginių 8) ; 1.80 GHz
 
+Operatyvioji atmintis: 16GB RAM ( 2x8GB ) DDR4
 
-| Įrašų kiekis  | 1tūkst.(10paž.) | 10tūkst.(10paž.) | 100tūkst.(10paž.)  | 100tūkst.(20paž.) | 1mil.(10paž.)  | 1mil.(20paž.) | 10mil.(10paž.)
-| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |------------- |
-| Naujo failo sukūrimo laikas  | 0.00812s  |0.09327s  | 0.21541s  | 0.33624s  | 1.15105s |2.83936s | 14.525s |
-| Failo nuskaitymo trukmė  | 0.00071s  | 0.00678s  | 0.02385s  | 0.03053s  | 0.20240s  | 0.22819s  | 1.73662s |
-| Nuskaityto failo duomenų pertvarkymas| 0.02281s | 0.08398s  | 0.50214s | 0.79016s | 4.27163s  | 7.40528s  | 43.12s  |
-| Studentų rūšiavimas pagal galutinį balą(sort) | 0.00657s | 0.01996s  | 0.18515s  | 0.177451  | 2.0181s | 1.9569s  | 24.9s  |
-| Studentų dalijimas į 2-i grupes  | 0.00226s  | 0.00605s  |0.06192s |0.06624s  | 0.54718s  | 0.57527s  | 5.27099s  |
-| Padalintų studentų išvedimas į 2-u naujus failus | 0.00611s   | 0.01322s | 0.140638s  | 0.130227s  | 0.73620s  | 0.87743s | 9.82542s  |
-| **Visos programos veikimo laikas**  | 0.04807s  | 0.22691s  | 1.15993s  | 1.57964s  | 9.5939s  | 14.3081s | 101.754s  |
+Kietasis diskas: 512GB SSD bendrai (Dual-boot operacinėje sistemoje, kurioje ir vykdžiau testavimą esu skyręs tik 40GB vietos)
+
+<h2>Programos veikimo laikai: (su 10-imt pažymių)</h2>
+
+**std::vector versija:**
+| Įrašų kiekis  | 1tūkst.| 10tūkst.| 100tūkst.| 1mil.| 10mil.
+| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
+| Nuskaityto failo duomenų pertvarkymas| 0.01029s | 0.14728s  | 0.46259s | 4.1899s | 29.313s  |
+| Studentų rūšiavimas pagal galutinį balą(sort) | 0.00188s | 0.0169179s  | 0.17058s  | 2.06811s  | 25.6781s |
+| Studentų dalijimas į 2-i grupes  | 0.000812s  | 0.00502s  |0.0598433s |0.529551s  | 5.59538  |
+
+<br>
+
+**std::list versija:**
+| Įrašų kiekis  | 1tūkst.| 10tūkst.| 100tūkst.| 1mil.| 10mil.
+| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
+| Nuskaityto failo duomenų pertvarkymas| 0.01253s | 0.15464s  | 0.56027s | 5.14107s | 52.539s  |
+| Studentų rūšiavimas pagal galutinį balą(sort) | 0.001009s | 0.0076s  | 0.09008s  | 1.22083s  | 18.1588s |
+| Studentų dalijimas į 2-i grupes  | 0.000818s  | 0.0084s  |0.09638s |0.980273s  | 9.90474s  |
+
+**std::deque versija:**
+| Įrašų kiekis  | 1tūkst.| 10tūkst.| 100tūkst.| 1mil.| 10mil.
+| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
+| Nuskaityto failo duomenų pertvarkymas| 0.03221s | 0.15544s  | 0.57529s | 5.70709s | 54.7563  |
+| Studentų rūšiavimas pagal galutinį balą(sort) | 0.01259s | 0.03736s  | 0.329958s  | 4.3188s  | 104.521s |
+| Studentų dalijimas į 2-i grupes  | 0.00487s  | 0.0155516s  |0.148766s |1.61614s  | 51.9328s  |

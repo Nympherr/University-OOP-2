@@ -1,6 +1,6 @@
-// v0.4 versijos programa
+// v0.5 versijos programa
 
-#include "functions.h"
+#include "functions_vector.h"
 
 int main(){                                                                                                     
 

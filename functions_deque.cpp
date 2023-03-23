@@ -1,7 +1,7 @@
-#include "functions.h"
+#include "functions_deque.h"
 
 int mokiniu_dydis = 0;
-std::vector<studentas> asmenys;
+std::deque<studentas> asmenys;
 
 void atsitiktiniu_reiksmiu_generavimas(studentas& asmuo){
 
@@ -207,7 +207,7 @@ void duomenu_suvedimas(studentas& asmuo){
     std::cout << "-------------------------------------\n\n";
 };
 
-void vidurkio_vaizdavimas(std::vector<studentas> &asmuo){
+void vidurkio_vaizdavimas(std::deque<studentas> &asmuo){
     
     std::cout << "\nPavarde              Vardas               Galutinis (Vid.)\n";
     std::cout << "------------------------------------------------------------\n";
@@ -236,7 +236,7 @@ void vidurkio_vaizdavimas(std::vector<studentas> &asmuo){
     std::cout << "\n";
 };
 
-void medianos_vaizdavimas(std::vector<studentas> &asmuo){
+void medianos_vaizdavimas(std::deque<studentas> &asmuo){
 
     std::cout << "Pavarde              Vardas               Galutinis (Med.)\n";
     std::cout << "------------------------------------------------------------\n";
@@ -348,7 +348,7 @@ bool galutinio_balo_rusiavimas(const studentas& asmuo1, const studentas& asmuo2)
     return asmuo1.galutinis_balas > asmuo2.galutinis_balas;
 };
 
-void failo_irasymas_paprastai(const std::string& failo_pavadinimas, const std::vector<studentas>& sarasas) {
+void failo_irasymas_paprastai(const std::string& failo_pavadinimas, const std::deque<studentas>& sarasas) {
 
     std::ostringstream buferis;
 
@@ -380,7 +380,7 @@ void failo_studento_nuskaitymas(std::string failo_pavadinimas){
     skaitomas_failas.open(failo_pavadinimas);
 
     std::string nuskaityta_eilute;
-    std::vector<std::string> nuskaitytas_failas;
+    std::deque<std::string> nuskaitytas_failas;
 
     // Skaitoma atidaryto failo kiekviena eilutė
 
@@ -400,12 +400,12 @@ void failo_studento_nuskaitymas(std::string failo_pavadinimas){
 
     auto start_duomenu_pertvarkymas = std::chrono::high_resolution_clock::now(); auto st2=start_duomenu_pertvarkymas;
 
-    std::vector<std::vector<std::string>> rezultatas;
+    std::deque<std::deque<std::string>> rezultatas;
 
     for (const std::string& x : nuskaitytas_failas) {
 
             std::istringstream neisskaidyta_eilute(x);
-            std::vector<std::string> isskaidyti_zodziai;
+            std::deque<std::string> isskaidyti_zodziai;
             std::string zodis;
 
             while (neisskaidyta_eilute >> zodis) {
@@ -416,26 +416,24 @@ void failo_studento_nuskaitymas(std::string failo_pavadinimas){
 
     // Kiekvienoje iteracijoje sukuriamas naujas studento objektas
 
-    asmenys.reserve(nuskaitytas_failas.size());
+    for (const auto& result : rezultatas) {
 
-    for(int i = 0; i < rezultatas.size() ; i++){
+        studentas temp;
 
-        asmenys.emplace_back(studentas());
-        asmenys[i].pazymiai.reserve(rezultatas[i].size() - 3);
-        const int n = rezultatas[i].size();
+        const int n = result.size();
 
         for(int j = 0; j < n ; j++){
         
             if(j == 0){
-                asmenys[i].vardas = rezultatas[i][j];
+                temp.vardas = result[j];
             }
             else if(j == 1){
-                asmenys[i].pavarde = rezultatas[i][j];
+                temp.pavarde = result[j];
             }
             else if(j > 1 && j < n - 1){
                 try{
-                    int reiksme = std::stoi(rezultatas[i][j]);
-                    asmenys[i].pazymiai.push_back(reiksme);
+                    int reiksme = std::stoi(result[j]);
+                    temp.pazymiai.push_back(reiksme);
                 }
                 catch (const std::invalid_argument& e) {
                     continue;
@@ -443,20 +441,21 @@ void failo_studento_nuskaitymas(std::string failo_pavadinimas){
             }
             else if(j == n - 1){
                 try{
-                int reiksme = std::stoi(rezultatas[i][j]);
-                asmenys[i].egzaminas = reiksme;
+                int reiksme = std::stoi(result[j]);
+                temp.egzaminas = reiksme;
                 }
                 catch (const std::invalid_argument& e) {
-                    asmenys[i].egzaminas = 0;
+                    temp.egzaminas = 0;
                 }
             }   
         }
-        galutinio_balo_skaiciavimas(asmenys[i]);
-        medianos_skaiciavimas(asmenys[i]);
+        galutinio_balo_skaiciavimas(temp);
+        medianos_skaiciavimas(temp);
+        asmenys.push_back(temp);
     }
     auto end_sutvarkyti_duomenys = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff_sutvarkyti_duomenys = end_sutvarkyti_duomenys-start_duomenu_pertvarkymas;
-    std::cout << "Nuskaityto failo duomenų pertvarkymas(studentų sudėjimas į vektorius):  "<< diff_sutvarkyti_duomenys.count() << " s\n"; 
+    std::cout << "Nuskaityto failo duomenų pertvarkymas(studentų sudėjimas į deką):  "<< diff_sutvarkyti_duomenys.count() << " s\n"; 
 };
 
 void failo_nuskaitymas(){
@@ -500,7 +499,7 @@ void failo_nuskaitymas(){
 
     auto start_sort = std::chrono::high_resolution_clock::now(); auto st5=start_sort;
 
-    std::sort(asmenys.begin(), asmenys.end(), galutinio_balo_rusiavimas);
+    sort(asmenys.begin(), asmenys.end(), galutinio_balo_rusiavimas);
 
      auto end_sort = std::chrono::high_resolution_clock::now();
      std::chrono::duration<double> diff_sort = end_sort-start_sort;
@@ -511,8 +510,8 @@ void failo_nuskaitymas(){
 
      auto start_rusiavimas = std::chrono::high_resolution_clock::now(); auto st2=start_rusiavimas;
 
-     std::vector<studentas> asmenys_vargsiukai;
-     std::vector<studentas> asmenys_kietakai;
+     std::deque<studentas> asmenys_vargsiukai;
+     std::deque<studentas> asmenys_kietakai;
 
 
     for(int i =0; i < asmenys.size();i++){
@@ -539,8 +538,8 @@ void failo_nuskaitymas(){
 
     auto start_failai = std::chrono::high_resolution_clock::now(); auto st3=start_failai;
 
-    failo_irasymas_paprastai("vargsiukai.txt",asmenys_vargsiukai);
-    failo_irasymas_paprastai("kietakai.txt",asmenys_kietakai);
+    failo_irasymas_paprastai("badBoys.txt",asmenys_vargsiukai);
+    failo_irasymas_paprastai("coolBoys.txt",asmenys_kietakai);
 
     auto end_failai = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff_failai = end_failai-start_failai;

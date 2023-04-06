@@ -520,19 +520,41 @@ void failo_nuskaitymas(){
 //--------------------------------------------------------------------------------------------------------------------
 // STRATEGIJA NR.2 PRADŽIA          (Bendro konteinerio suskaidymas tik į 1-ą naują)
 
-    int vektoriaus_dydis = asmenys.size();
-
     std::vector<studentas> asmenys_vargsiukai;
+ 
+    // #1
+    // Paprastas grupių dalinimas
 
-    for(int i = vektoriaus_dydis - 1 ;i >= 0;i--){
-        if(asmenys[i].galutinis_balas >= 5.0){
-            continue;
-        }
-        else{
-            asmenys_vargsiukai.insert(asmenys_vargsiukai.begin(),asmenys[i]);
-            asmenys.erase(asmenys.begin() + i);
-        }
-    }
+    //int vektoriaus_dydis = asmenys.size();
+    // for(int i = vektoriaus_dydis - 1 ;i >= 0;i--){
+    //     if(asmenys[i].galutinis_balas >= 5.0){
+    //         continue;
+    //     }
+    //     else{
+    //         asmenys_vargsiukai.insert(asmenys_vargsiukai.begin(),asmenys[i]);
+    //         asmenys.erase(asmenys.begin() + i);
+    //     }
+    // }
+
+    // #2
+    // grupių dalinimas su std::partition
+
+    // auto iteratorius = std::partition(asmenys.begin(), asmenys.end(), [](const studentas& asmuo) {
+    //     return asmuo.galutinis_balas >= 5.0;
+    // });
+    // for (auto i = iteratorius; i != asmenys.end(); ++i) {
+    //     asmenys_vargsiukai.push_back(*i);
+    // }
+    // asmenys.erase(iteratorius, asmenys.end());
+
+    // #3
+    // grupių dalinimas su std::remove_if
+
+    auto iteratorius = std::remove_if(asmenys.begin(), asmenys.end(), [](const studentas& asmuo) {
+        return asmuo.galutinis_balas >= 5.0;
+    });
+    asmenys_vargsiukai.insert(asmenys_vargsiukai.begin(), iteratorius, asmenys.end());
+    asmenys.erase(iteratorius, asmenys.end());
 
     auto end_rusiavimas = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff_rusiavimas = end_rusiavimas-start_rusiavimas;

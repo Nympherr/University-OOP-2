@@ -207,31 +207,31 @@ void duomenu_suvedimas(studentas& asmuo){
     std::cout << "-------------------------------------\n\n";
 };
 
-void vidurkio_vaizdavimas(std::list<studentas> &asmuo){
+void vidurkio_vaizdavimas(std::list<studentas> &sarasas){
     
     std::cout << "\nPavarde              Vardas               Galutinis (Vid.)\n";
     std::cout << "------------------------------------------------------------\n";
 
-    for (const auto& persona : asmuo) {
+    for (const auto& asmuo : sarasas) {
         std::cout << std::fixed << std::setprecision(2);
-        std::cout << std::setw(21) << std::left << persona.pavarde;
-        std::cout << std::setw(21) << std::left << persona.vardas;
-        std::cout << persona.galutinis_balas << '\n';
+        std::cout << std::setw(21) << std::left << asmuo.pavarde;
+        std::cout << std::setw(21) << std::left << asmuo.vardas;
+        std::cout << asmuo.galutinis_balas << '\n';
     }
 
     std::cout << "\n";
 };
 
-void medianos_vaizdavimas(std::list<studentas> &asmuo){
+void medianos_vaizdavimas(std::list<studentas> &sarasas){
 
     std::cout << "Pavarde              Vardas               Galutinis (Med.)\n";
     std::cout << "------------------------------------------------------------\n";
 
-    for (const auto& persona : asmuo) {
+    for (const auto& asmuo : sarasas) {
         std::cout << std::fixed << std::setprecision(2);
-        std::cout << std::setw(21) << std::left << persona.pavarde;
-        std::cout << std::setw(21) << std::left << persona.vardas;
-        std::cout << persona.mediana << '\n';
+        std::cout << std::setw(21) << std::left << asmuo.pavarde;
+        std::cout << std::setw(21) << std::left << asmuo.vardas;
+        std::cout << asmuo.mediana << '\n';
     }
 
     std::cout << "\n";
@@ -389,23 +389,22 @@ void failo_studento_nuskaitymas(std::string failo_pavadinimas){
 
     for (const auto& result : rezultatas) {
 
-
-        asmenys.push_back(studentas());
+        studentas temp;
 
         const int n = result.size();      
 
         for(int j = 0; j < n ; j++){
         
             if(j == 0){
-                asmenys.back().vardas = result[j]; 
+                temp.vardas = result[j]; 
             }
             else if(j == 1){
-                asmenys.back().pavarde = result[j];
+                temp.pavarde = result[j];
             }
             else if(j > 1 && j < n - 1){
                 try{
                     int reiksme = std::stoi(result[j]);
-                    asmenys.back().pazymiai.push_back(reiksme);
+                    temp.pazymiai.push_back(reiksme);
                 }
                 catch (const std::invalid_argument& e) {
                     continue;
@@ -414,16 +413,18 @@ void failo_studento_nuskaitymas(std::string failo_pavadinimas){
             else if(j == n - 1){
                 try{
                 int reiksme = std::stoi(result[j]);
-                asmenys.back().egzaminas = reiksme;
+                temp.egzaminas = reiksme;
                 }
                 catch (const std::invalid_argument& e) {
-                    asmenys.back().egzaminas = 0;
+                    temp.egzaminas = 0;
                 }
             }   
         }
-        galutinio_balo_skaiciavimas(asmenys.back());
-        medianos_skaiciavimas(asmenys.back());
+        galutinio_balo_skaiciavimas(temp);
+        medianos_skaiciavimas(temp);
+        asmenys.push_back(temp);
     }
+
     auto end_sutvarkyti_duomenys = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff_sutvarkyti_duomenys = end_sutvarkyti_duomenys-start_duomenu_pertvarkymas;
     std::cout << "Nuskaityto failo duomenų pertvarkymas(studentų sudėjimas į list'ą):  "<< diff_sutvarkyti_duomenys.count() << " s\n"; 
@@ -515,16 +516,6 @@ void failo_nuskaitymas(){
     std::chrono::duration<double> diff_failai = end_failai-start_failai;
     std::cout << "Padalintų studentų išvedimas į 2-u naujus failus: "<< diff_failai.count() << " s\n";  
 
-    // for(int i = 0; i < asmenys_vargsiukai.size();i++){
-    // asmenys_vargsiukai[i].pazymiai.clear();
-    // }
-    // asmenys_vargsiukai.clear();
-
-    // for(int i = 0; i < asmenys_kietakai.size();i++){
-    // asmenys_kietakai[i].pazymiai.clear();
-    // }
-    // asmenys_kietakai.clear();
- 
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff = end-start;
     std::cout << "\nVisos programos veikimo laikas: "<< diff.count() << " s\n\n";  
@@ -602,6 +593,8 @@ void failo_sukurimas(){
 
     std::ostringstream buferis;
 
+    // Naujame faile "i" yra INDEKSAS. i=0 skirtas vardui; i=1 skirtas pavardei, paskutinis egzaminui
+
     for(int i = 0; i < eilutes_ilgis; i++){
         if(i==0){
             buferis << std::setw(25) << std::left << "Vardas";
@@ -616,6 +609,10 @@ void failo_sukurimas(){
          buferis << std::setw(10) << std::left << "ND" + std::to_string(i - 1);
         }
     }
+
+    // Kuriamas naujas failas formatu vardas1 , vardas2 ir t.t.
+    // i+1 skirtas, kad atvaizduotų tinkamą skaičių prie vardo/pavardės
+    // eilutes_ilgis - 1 skirtas patikrinti ar tai yra paskutinis eilutės įrašas, kuriame galima įrašyti egzamino rezultatą
 
     for(int i = 0; i < studentu_skaicius; i++){
         for(int j=0; j < eilutes_ilgis; j++){

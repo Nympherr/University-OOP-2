@@ -472,7 +472,7 @@ void failo_nuskaitymas(){
 
     auto start_sort = std::chrono::high_resolution_clock::now(); auto st5=start_sort;
 
-    sort(asmenys.begin(), asmenys.end(), galutinio_balo_rusiavimas);
+    std::sort(asmenys.begin(), asmenys.end(), galutinio_balo_rusiavimas);
 
      auto end_sort = std::chrono::high_resolution_clock::now();
      std::chrono::duration<double> diff_sort = end_sort-start_sort;
@@ -483,6 +483,9 @@ void failo_nuskaitymas(){
 
      auto start_rusiavimas = std::chrono::high_resolution_clock::now(); auto st2=start_rusiavimas;
 
+//---------------------------------------------------------------------------------------------------------
+// STRATEGIJA NR.1 PRADŽIA               (Bendro konteinerio suskaidymas į 2-u naujus)
+/*
      std::deque<studentas> asmenys_vargsiukai;
      std::deque<studentas> asmenys_kietakai;
 
@@ -496,7 +499,7 @@ void failo_nuskaitymas(){
         }
     }
 
-    // ištrina bendrą vektorių, kadangi nebenaudojame
+    // ištrina bendrą deką, kadangi nebenaudojame
 
     for(int i = 0; i < asmenys.size();i++){
         asmenys[i].pazymiai.clear();
@@ -513,6 +516,38 @@ void failo_nuskaitymas(){
 
     failo_irasymas_paprastai("badBoys.txt",asmenys_vargsiukai);
     failo_irasymas_paprastai("coolBoys.txt",asmenys_kietakai);
+*/
+// STRATEGIJA NR.1 PABAIGA
+//--------------------------------------------------------------------------------------------------------------------
+// STRATEGIJA NR.2 PRADŽIA          (Bendro konteinerio suskaidymas tik į 1-ą naują)
+
+    int vektoriaus_dydis = asmenys.size();
+
+    std::deque<studentas> asmenys_vargsiukai;
+
+    for(int i = vektoriaus_dydis - 1 ;i >= 0;i--){
+        if(asmenys[i].galutinis_balas >= 5.0){
+            continue;
+        }
+        else{
+            asmenys_vargsiukai.insert(asmenys_vargsiukai.begin(),asmenys[i]);
+            asmenys.erase(asmenys.begin() + i);
+        }
+    }
+
+    auto end_rusiavimas = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> diff_rusiavimas = end_rusiavimas-start_rusiavimas;
+    std::cout << "Studentų dalijimas į 2-i grupes: "<< diff_rusiavimas.count() << " s\n";  
+
+    // Sukuria du naujus failus su atrūšiuotais studentais
+
+    auto start_failai = std::chrono::high_resolution_clock::now(); auto st3=start_failai;
+
+    failo_irasymas_paprastai("badBoys.txt",asmenys_vargsiukai);
+    failo_irasymas_paprastai("coolBoys.txt",asmenys);
+
+// STRATEGIJA NR.2 PABAIGA
+//--------------------------------------------------------------------------------------------------------------------
 
     auto end_failai = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff_failai = end_failai-start_failai;

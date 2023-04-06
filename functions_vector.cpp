@@ -428,7 +428,7 @@ void failo_studento_nuskaitymas(std::string failo_pavadinimas){
     }
     auto end_sutvarkyti_duomenys = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff_sutvarkyti_duomenys = end_sutvarkyti_duomenys-start_duomenu_pertvarkymas;
-    std::cout << "Nuskaityto failo duomenų pertvarkymas(studentų sudėjimas į deką):  "<< diff_sutvarkyti_duomenys.count() << " s\n"; 
+    std::cout << "Nuskaityto failo duomenų pertvarkymas(studentų sudėjimas į vektorių):  "<< diff_sutvarkyti_duomenys.count() << " s\n"; 
 };
 
 void failo_nuskaitymas(){
@@ -464,11 +464,11 @@ void failo_nuskaitymas(){
 
     auto start = std::chrono::high_resolution_clock::now(); auto st=start;
     std::cout << "\n---------------- Irasomi duomenys.... ----------------\n\n";
-     // Kviečiam funkciją, kuri nuskaitys šį failą ir studentus sudės į bendrą vektorių.
+    // Kviečiam funkciją, kuri nuskaitys šį failą ir studentus sudės į bendrą vektorių.
 
     failo_studento_nuskaitymas(failo_pavadinimas);
 
-     // Studentų rūšiavimas pagal pažymį
+    // Studentų rūšiavimas pagal pažymį
 
     auto start_sort = std::chrono::high_resolution_clock::now(); auto st5=start_sort;
 
@@ -478,14 +478,16 @@ void failo_nuskaitymas(){
      std::chrono::duration<double> diff_sort = end_sort-start_sort;
      std::cout << "Studentų rūšiavimas pagal galutinį balą(sort): "<< diff_sort.count() << " s\n";  
 
-     // Iš bendro studentų vektoriaus, studentai yra surūšiuojami pagal galutinį balą
-     // ir įrašomi į jiems skirtus vektorius
+    // Iš bendro studentų vektoriaus, studentai yra surūšiuojami pagal galutinį balą
+    // ir įrašomi į jiems skirtus vektorius
 
      auto start_rusiavimas = std::chrono::high_resolution_clock::now(); auto st2=start_rusiavimas;
 
+//---------------------------------------------------------------------------------------------------------
+// STRATEGIJA NR.1 PRADŽIA               (Bendro konteinerio suskaidymas į 2-u naujus)
+/*
      std::vector<studentas> asmenys_vargsiukai;
      std::vector<studentas> asmenys_kietakai;
-
 
     for(int i =0; i < asmenys.size();i++){
         if(asmenys[i].galutinis_balas >= 5.0){
@@ -513,6 +515,38 @@ void failo_nuskaitymas(){
 
     failo_irasymas_paprastai("badBoys.txt",asmenys_vargsiukai);
     failo_irasymas_paprastai("coolBoys.txt",asmenys_kietakai);
+*/
+// STRATEGIJA NR.1 PABAIGA
+//--------------------------------------------------------------------------------------------------------------------
+// STRATEGIJA NR.2 PRADŽIA          (Bendro konteinerio suskaidymas tik į 1-ą naują)
+
+    int vektoriaus_dydis = asmenys.size();
+
+    std::vector<studentas> asmenys_vargsiukai;
+
+    for(int i = vektoriaus_dydis - 1 ;i >= 0;i--){
+        if(asmenys[i].galutinis_balas >= 5.0){
+            continue;
+        }
+        else{
+            asmenys_vargsiukai.insert(asmenys_vargsiukai.begin(),asmenys[i]);
+            asmenys.erase(asmenys.begin() + i);
+        }
+    }
+
+    auto end_rusiavimas = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> diff_rusiavimas = end_rusiavimas-start_rusiavimas;
+    std::cout << "Studentų dalijimas į 2-i grupes: "<< diff_rusiavimas.count() << " s\n";  
+
+    // Sukuria du naujus failus su atrūšiuotais studentais
+
+    auto start_failai = std::chrono::high_resolution_clock::now(); auto st3=start_failai;
+
+    failo_irasymas_paprastai("badBoys.txt",asmenys_vargsiukai);
+    failo_irasymas_paprastai("coolBoys.txt",asmenys);
+
+// STRATEGIJA NR.2 PABAIGA
+//--------------------------------------------------------------------------------------------------------------------
 
     auto end_failai = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff_failai = end_failai-start_failai;

@@ -482,6 +482,9 @@ void failo_nuskaitymas(){
 
      auto start_rusiavimas = std::chrono::high_resolution_clock::now(); auto st2=start_rusiavimas;
 
+//---------------------------------------------------------------------------------------------------------
+// STRATEGIJA NR.1 PRADŽIA               (Bendro konteinerio suskaidymas į 2-u naujus)
+
      std::list<studentas> asmenys_vargsiukai;
      std::list<studentas> asmenys_kietakai;
 
@@ -512,6 +515,36 @@ void failo_nuskaitymas(){
     failo_irasymas_paprastai("badBoys.txt",asmenys_vargsiukai);
     failo_irasymas_paprastai("coolBoys.txt",asmenys_kietakai);
 
+
+// STRATEGIJA NR.1 PABAIGA
+//--------------------------------------------------------------------------------------------------------------------
+// STRATEGIJA NR.2 PRADŽIA          (Bendro konteinerio suskaidymas tik į 1-ą naują)
+/*
+    std::list<studentas> asmenys_vargsiukai;
+
+    for(auto it = asmenys.rbegin(); it != asmenys.rend(); ++it){
+        if(it->galutinis_balas >= 5.0){
+            continue;
+        }
+        else{
+            asmenys_vargsiukai.push_front(*it);
+            it = std::list<studentas>::reverse_iterator(asmenys.erase(std::next(it).base()));
+        }
+    }
+
+    auto end_rusiavimas = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> diff_rusiavimas = end_rusiavimas-start_rusiavimas;
+    std::cout << "Studentų dalijimas į 2-i grupes: "<< diff_rusiavimas.count() << " s\n";  
+
+    // Sukuria du naujus failus su atrūšiuotais studentais
+
+    auto start_failai = std::chrono::high_resolution_clock::now(); auto st3=start_failai;
+
+    failo_irasymas_paprastai("badBoys.txt",asmenys_vargsiukai);
+    failo_irasymas_paprastai("coolBoys.txt",asmenys);
+*/
+// STRATEGIJA NR.2 PABAIGA
+//--------------------------------------------------------------------------------------------------------------------
     auto end_failai = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff_failai = end_failai-start_failai;
     std::cout << "Padalintų studentų išvedimas į 2-u naujus failus: "<< diff_failai.count() << " s\n";  

@@ -485,9 +485,12 @@ void failo_nuskaitymas(){
 
 //---------------------------------------------------------------------------------------------------------
 // STRATEGIJA NR.1 PRADŽIA               (Bendro konteinerio suskaidymas į 2-u naujus)
-/*
+
      std::vector<studentas> asmenys_vargsiukai;
      std::vector<studentas> asmenys_kietakai;
+
+    // #1
+    // Paprasta realizacija
 
     for(int i =0; i < asmenys.size();i++){
         if(asmenys[i].galutinis_balas >= 5.0){
@@ -497,6 +500,15 @@ void failo_nuskaitymas(){
             asmenys_vargsiukai.push_back(asmenys[i]);
         }
     }
+
+    // #2
+    // std::copy_if naudojamas
+
+    // std::copy_if(asmenys.begin(), asmenys.end(), std::back_inserter(asmenys_kietakai),
+    // [](const studentas& stud) { return stud.galutinis_balas >= 5.0; });
+
+    // std::copy_if(asmenys.begin(), asmenys.end(), std::back_inserter(asmenys_vargsiukai),
+    // [](const studentas& stud) { return stud.galutinis_balas < 5.0; });
 
     // ištrina bendrą vektorių, kadangi nebenaudojame
 
@@ -515,12 +527,12 @@ void failo_nuskaitymas(){
 
     failo_irasymas_paprastai("badBoys.txt",asmenys_vargsiukai);
     failo_irasymas_paprastai("coolBoys.txt",asmenys_kietakai);
-*/
+
 // STRATEGIJA NR.1 PABAIGA
 //--------------------------------------------------------------------------------------------------------------------
 // STRATEGIJA NR.2 PRADŽIA          (Bendro konteinerio suskaidymas tik į 1-ą naują)
 
-    std::vector<studentas> asmenys_vargsiukai;
+    // std::vector<studentas> asmenys_vargsiukai;
  
     // #1
     // Paprastas grupių dalinimas
@@ -550,22 +562,22 @@ void failo_nuskaitymas(){
     // #3
     // grupių dalinimas su std::remove_if
 
-    auto iteratorius = std::remove_if(asmenys.begin(), asmenys.end(), [](const studentas& asmuo) {
-        return asmuo.galutinis_balas >= 5.0;
-    });
-    asmenys_vargsiukai.insert(asmenys_vargsiukai.begin(), iteratorius, asmenys.end());
-    asmenys.erase(iteratorius, asmenys.end());
+    // auto iteratorius = std::remove_if(asmenys.begin(), asmenys.end(), [](const studentas& asmuo) {
+    //     return asmuo.galutinis_balas >= 5.0;
+    // });
+    // asmenys_vargsiukai.insert(asmenys_vargsiukai.begin(), iteratorius, asmenys.end());
+    // asmenys.erase(iteratorius, asmenys.end());
 
-    auto end_rusiavimas = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> diff_rusiavimas = end_rusiavimas-start_rusiavimas;
-    std::cout << "Studentų dalijimas į 2-i grupes: "<< diff_rusiavimas.count() << " s\n";  
+    // auto end_rusiavimas = std::chrono::high_resolution_clock::now();
+    // std::chrono::duration<double> diff_rusiavimas = end_rusiavimas-start_rusiavimas;
+    // std::cout << "Studentų dalijimas į 2-i grupes: "<< diff_rusiavimas.count() << " s\n";  
 
-    // Sukuria du naujus failus su atrūšiuotais studentais
+    // // Sukuria du naujus failus su atrūšiuotais studentais
 
-    auto start_failai = std::chrono::high_resolution_clock::now(); auto st3=start_failai;
+    // auto start_failai = std::chrono::high_resolution_clock::now(); auto st3=start_failai;
 
-    failo_irasymas_paprastai("badBoys.txt",asmenys_vargsiukai);
-    failo_irasymas_paprastai("coolBoys.txt",asmenys);
+    // failo_irasymas_paprastai("badBoys.txt",asmenys_vargsiukai);
+    // failo_irasymas_paprastai("coolBoys.txt",asmenys);
 
 // STRATEGIJA NR.2 PABAIGA
 //--------------------------------------------------------------------------------------------------------------------

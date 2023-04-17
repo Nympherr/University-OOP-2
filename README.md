@@ -1,4 +1,4 @@
-# Versija v1.0
+# Versija v1.0.1
 ***Šeštoji objektinio programavimo užduoties versija.***
 
 <h2>Ką programa daro?</h2>

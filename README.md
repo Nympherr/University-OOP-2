@@ -47,7 +47,6 @@ Ką vertėtų žinoti:
 5) Sugeneruoti nauji failai atsiranda tokiu pavidalu: "studentai" + skaičius .txt (skaičius reiškia kiek studentų faile yra)
 6) badBoys.txt - po failų nuskaitymo atsirandantis failas, kur kiekvieno studento galutinis balas yra žemesnis nei 5
 6) coolBoys.txt - po failų nuskaitymo atsirandantis failas, kur kiekvieno studento galutinis balas yra didesnis arba lygus 5
-7) Vietose yra užkomentuotas kodas, kur pvž. yra realizuota programa skirtingais būdais. Norint pakeisti realizacijos būdą reikės užkomentuoti naudojamą realizaciją ir atkomentuoti norimą
 
 <h2>Visos funkcijos:</h2>
 
@@ -105,6 +104,15 @@ Procesorius: Intel® Core™ i7-8550U ; Branduoliai: 4 (loginių 8) ; 1.80 GHz
 Operatyvioji atmintis: 16GB RAM ( 2x8GB ) DDR4
 
 Kietasis diskas: 512GB SSD bendrai (Dual-boot operacinėje sistemoje, kurioje ir vykdžiau testavimą esu skyręs tik 40GB vietos)
+
+
+<h2>Operatyvios atminties naudojimas skirtingų strategijų atžvilgiu</h2>
+
+(Testavimas buvo atliktas su Windows operacine sistema)
+
+Pirmoje strategijoje operatyvioji atmintis yra žymiai labiau naudojama, testavimo atveju (su task manager) naudojimas viršijo virš 2GB. Logiška, nes su šia strategija vienu metu tas pats įrašas bus dviejuose skirtinguose konteineriuose.
+
+Antroje strategijoje operatyvioji atmintis į viršų nešokinėjo, visą laiką naudojimas buvo stabilus, apie 700MB-800MB. Taip yra, nes vienu metu vienas įrašas egzistuoja tik viename konteineryje.
 
 <h2>Programos veikimo laikai: (su 10-imt pažymių) (rodomas tik studentų rūšiavimo į konteinerius laikas)</h2>
 

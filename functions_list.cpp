@@ -430,7 +430,7 @@ void failo_studento_nuskaitymas(std::string failo_pavadinimas){
     std::cout << "Nuskaityto failo duomenų pertvarkymas(studentų sudėjimas į list'ą):  "<< diff_sutvarkyti_duomenys.count() << " s\n"; 
 };
 
-void failo_nuskaitymas(){
+void failo_nuskaitymas(std::string pasirinkimas){
 
     // Duoda vartotojui pasirinkti failą, kurį jis nori atidaryti
 
@@ -485,70 +485,79 @@ void failo_nuskaitymas(){
 //---------------------------------------------------------------------------------------------------------
 // STRATEGIJA NR.1 PRADŽIA               (Bendro konteinerio suskaidymas į 2-u naujus)
 
-     std::list<studentas> asmenys_vargsiukai;
-     std::list<studentas> asmenys_kietakai;
+    if(pasirinkimas == "1"){
 
-    for (const auto& asmuo : asmenys) {
-        if(asmuo.galutinis_balas >= 5.0){
-            asmenys_kietakai.push_back(asmuo);
+        std::list<studentas> asmenys_vargsiukai;
+        std::list<studentas> asmenys_kietakai;
+
+        for (const auto& asmuo : asmenys) {
+            if(asmuo.galutinis_balas >= 5.0){
+                asmenys_kietakai.push_back(asmuo);
+            }
+            else{
+                asmenys_vargsiukai.push_back(asmuo);
+            }
         }
-        else{
-            asmenys_vargsiukai.push_back(asmuo);
-        }
-    }
 
     // ištrina bendrą vektorių, kadangi nebenaudojame
 
-    for (auto& asmuo : asmenys) {
-        asmuo.pazymiai.clear();
-    }
-    asmenys.clear();
+        for (auto& asmuo : asmenys) {
+            asmuo.pazymiai.clear();
+        }
+        asmenys.clear();
 
-    auto end_rusiavimas = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> diff_rusiavimas = end_rusiavimas-start_rusiavimas;
-    std::cout << "Studentų dalijimas į 2-i grupes: "<< diff_rusiavimas.count() << " s\n";  
+        auto end_rusiavimas = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> diff_rusiavimas = end_rusiavimas-start_rusiavimas;
+        std::cout << "Studentų dalijimas į 2-i grupes: "<< diff_rusiavimas.count() << " s\n";  
 
     // Sukuria du naujus failus su atrūšiuotais studentais
 
-    auto start_failai = std::chrono::high_resolution_clock::now(); auto st3=start_failai;
+        auto start_failai = std::chrono::high_resolution_clock::now(); auto st3=start_failai;
 
-    failo_irasymas_paprastai("badBoys.txt",asmenys_vargsiukai);
-    failo_irasymas_paprastai("coolBoys.txt",asmenys_kietakai);
+        failo_irasymas_paprastai("badBoys.txt",asmenys_vargsiukai);
+        failo_irasymas_paprastai("coolBoys.txt",asmenys_kietakai);
 
+        auto end_failai = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> diff_failai = end_failai-start_failai;
+        std::cout << "Padalintų studentų išvedimas į 2-u naujus failus: "<< diff_failai.count() << " s\n";  
+    }
 
 // STRATEGIJA NR.1 PABAIGA
 //--------------------------------------------------------------------------------------------------------------------
 // STRATEGIJA NR.2 PRADŽIA          (Bendro konteinerio suskaidymas tik į 1-ą naują)
-/*
-    std::list<studentas> asmenys_vargsiukai;
 
-    for(auto it = asmenys.rbegin(); it != asmenys.rend(); ++it){
-        if(it->galutinis_balas >= 5.0){
-            continue;
-        }
-        else{
-            asmenys_vargsiukai.push_front(*it);
-            it = std::list<studentas>::reverse_iterator(asmenys.erase(std::next(it).base()));
-        }
-    }
+    else if(pasirinkimas == "2"){
 
-    auto end_rusiavimas = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> diff_rusiavimas = end_rusiavimas-start_rusiavimas;
-    std::cout << "Studentų dalijimas į 2-i grupes: "<< diff_rusiavimas.count() << " s\n";  
+        std::list<studentas> asmenys_vargsiukai;
+
+        for(auto it = asmenys.rbegin(); it != asmenys.rend(); ++it){
+            if(it->galutinis_balas >= 5.0){
+                continue;
+            }
+            else{
+                asmenys_vargsiukai.push_front(*it);
+                it = std::list<studentas>::reverse_iterator(asmenys.erase(std::next(it).base()));
+            }
+        }
+
+        auto end_rusiavimas = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> diff_rusiavimas = end_rusiavimas-start_rusiavimas;
+        std::cout << "Studentų dalijimas į 2-i grupes: "<< diff_rusiavimas.count() << " s\n";  
 
     // Sukuria du naujus failus su atrūšiuotais studentais
 
-    auto start_failai = std::chrono::high_resolution_clock::now(); auto st3=start_failai;
+        auto start_failai = std::chrono::high_resolution_clock::now(); auto st3=start_failai;
 
-    failo_irasymas_paprastai("badBoys.txt",asmenys_vargsiukai);
-    failo_irasymas_paprastai("coolBoys.txt",asmenys);
-*/
+        failo_irasymas_paprastai("badBoys.txt",asmenys_vargsiukai);
+        failo_irasymas_paprastai("coolBoys.txt",asmenys);
+
+        auto end_failai = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> diff_failai = end_failai-start_failai;
+        std::cout << "Padalintų studentų išvedimas į 2-u naujus failus: "<< diff_failai.count() << " s\n";  
+
+    }
 // STRATEGIJA NR.2 PABAIGA
 //--------------------------------------------------------------------------------------------------------------------
-    auto end_failai = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> diff_failai = end_failai-start_failai;
-    std::cout << "Padalintų studentų išvedimas į 2-u naujus failus: "<< diff_failai.count() << " s\n";  
-
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff = end-start;
     std::cout << "\nVisos programos veikimo laikas: "<< diff.count() << " s\n\n";  
@@ -693,13 +702,30 @@ void programos_pradzia(){
         rezultatu_vaizdavimas();  
     }
 
-    else if(vartotojo_pasirinkimas == "2"){
+   else if(vartotojo_pasirinkimas == "2"){
 
         std::cout << "\n--------------------------------\n";
         std::cout << "      FAILO NUSKAITYMAS\n";
         std::cout << "--------------------------------\n";
 
-        failo_nuskaitymas();
+        std::cout << "\nPasirinkite norimą failo nuskaitymo strategiją:\n";
+        std::cout << "\nStrategija NR.1 - Bendro konteinerio skaidymas į 2-u naujus";
+        std::cout << "\nStrategija NR.2 - Bendro konteinerio skaidymas tik į 1-ą naują\n";
+        std::cout << "\n[1]- Pirma strategija\n";
+        std::cout << "[2]- Antra strategija\n";
+        std::cout<< "Jūsų pasirinkimas:  ";
+
+        std::string ivestis;
+        std::cin >> ivestis;
+
+        while(ivestis != "1" && ivestis != "2"){
+            std::cout<< "\nGalite pasirinkti tik [1] arba [2]!\n";
+            std::cout<< "Jūsų pasirinkimas:  ";
+            std::cin >> ivestis;
+            std::cout << std::endl;
+        }
+
+        failo_nuskaitymas(ivestis);
     }
     
     else if(vartotojo_pasirinkimas == "3"){

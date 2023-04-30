@@ -3,104 +3,6 @@
 int mokiniu_dydis = 0;
 std::vector<studentas> asmenys;
 
-void atsitiktiniu_reiksmiu_generavimas(studentas& asmuo){
-
-
-// Generuojamas atsitiktinis kiekis pažymių(1-40; galima keisti). Bei kiekvienas
-// individualus pažymys. Ir sukuriamas naujas masyvas, kuris būtent atvaizduoja
-// studento pažymius.
-
-    std::random_device rd;
-    std::mt19937 eng(rd());
-    std::uniform_int_distribution<> atsitiktinis_numeris(1, 40);
-    std::uniform_int_distribution<> pazymys(1, 10);
-
-    int pazymiu_kiekis = atsitiktinis_numeris(eng);
-
-    for(int i =0; i < pazymiu_kiekis;i++){
-        asmuo.pazymiai.push_back(pazymys(eng));
-    }
-
-    asmuo.egzaminas = pazymys(eng);
-
-    std::cout << "Sugeneruoti pazymiai: ";
-    for(int j =0; j < pazymiu_kiekis; j++){
-        std::cout << asmuo.pazymiai[j] << " ";
-    }
-    std::cout << "\nSugeneruotas egzamino rezultatas: " << asmuo.egzaminas << "\n";
-    std::cout << "-------------------------------------\n\n";
-};
-
-void medianos_skaiciavimas(studentas& asmuo){
-
-// Skaičiuoja medianą iš studento gautų pažymių. Masyvas yra surūšiuojamas didėjimo tvarka
-// ir mediana apskaičiuojama pagal formulę.
-
-    std::sort(asmuo.pazymiai.begin(), asmuo.pazymiai.end());
-
-    if(asmuo.pazymiai.size() % 2 == 1){
-            int indeksas_medianos = (asmuo.pazymiai.size() + 1) / 2;
-            asmuo.mediana = asmuo.pazymiai[indeksas_medianos - 1];
-    }
-    else{
-            int pirmas_vidurinis_skaicius = asmuo.pazymiai.size() / 2 - 1;
-            int antras_vidurinis_skaicius = asmuo.pazymiai.size() / 2;
-            double pazymys_pirmas = asmuo.pazymiai[pirmas_vidurinis_skaicius];
-            double pazymys_antras = asmuo.pazymiai[antras_vidurinis_skaicius];
-            asmuo.mediana = (pazymys_pirmas + pazymys_antras) / 2;
-    }
-};
-
-void galutinio_balo_skaiciavimas(studentas& asmuo){
-
-// Skaičiuoja galutinį balą pagal pažymių vidurkį ir egzamino balą
-
-    double vidurkis = 0.0;
-    
-    for(int i=0; i < asmuo.pazymiai.size();i++){
-        vidurkis += asmuo.pazymiai[i];
-    }
-    vidurkis = vidurkis / asmuo.pazymiai.size();
-    
-    asmuo.galutinis_balas = (0.4 * vidurkis) + (0.6 * asmuo.egzaminas);
-};
-
-void pazymiu_suvedimas(studentas& asmuo){
-
-// Leidžia vartotojui įvesti neribotą kiekį pažymių.
-    int pasirinkimas = 0;
-
-        while(std::cin >> pasirinkimas){
-
-            if(pasirinkimas < 1 || pasirinkimas > 10){
-                std::cout << "Pažymys gali būti tik tarp 1-10!";
-            }
-            else{
-                asmuo.pazymiai.push_back(pasirinkimas);
-            }
-        }
-};
-
-void egzamino_suvedimas(studentas& asmuo){
-
-// Leidžia vartotojui įvesti egzamino balą, bei tikrinama, kad įvestis būtų tinkama
-// (pvž. ne raidės)
-
-    int pasirinkimas;
-    std::cout << "Studento egzamino rezultatas: ";
-    std::cin >> pasirinkimas;
-
-    if(pasirinkimas > 10 || pasirinkimas < 1){
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        std::cout << "\nEgzamino rezultatas gali buti tik tarp 1-10!\n";
-        egzamino_suvedimas(asmuo);
-    }
-    else{
-        asmuo.egzaminas = pasirinkimas;
-    }
-};
-
 void duomenu_suvedimas(studentas& asmuo){
 
 // Tikrina ar vartotojo vardo įvestis yra iš raidžių ir ar neviršija nurodyto
@@ -112,12 +14,14 @@ void duomenu_suvedimas(studentas& asmuo){
     std::cin.clear();
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-    while (!yra_vardas || asmuo.vardas.length() < 1 || asmuo.vardas.length() > 20) {
+    while (!yra_vardas || asmuo.getVardas().length() < 1 || asmuo.getVardas().length() > 20) {
 
-        std::getline(std::cin, asmuo.vardas);
+        std::string vardas;
+        std::getline(std::cin, vardas);
+        asmuo.setVardas(vardas);
         yra_vardas = true;   
 
-        for (char c : asmuo.vardas) {
+        for (char c : asmuo.getVardas()) {
             if (!std::isalpha(c)) {
                 yra_vardas = false;
                 std::cout << "\nVarda gali sudaryti tik raides!\n";
@@ -125,7 +29,7 @@ void duomenu_suvedimas(studentas& asmuo){
                 break;
             }
         }
-        if(asmuo.vardas.length() < 1 || asmuo.vardas.length() > 20){
+        if(asmuo.getVardas().length() < 1 || asmuo.getVardas().length() > 20){
             std::cout << "\nVardas gali tureti tik 1-20 raidziu!\n";
             std::cout << "Vardas: ";
         }
@@ -137,12 +41,14 @@ void duomenu_suvedimas(studentas& asmuo){
     std::cout << "Studento pavarde: ";
     bool yra_pavarde = false;
 
-     while (!yra_pavarde || asmuo.pavarde.length() < 1 || asmuo.pavarde.length() > 20) {
+     while (!yra_pavarde || asmuo.getPavarde().length() < 1 || asmuo.getPavarde().length() > 20) {
 
-        std::getline(std::cin, asmuo.pavarde);
+        std::string pavarde;
+        std::getline(std::cin, pavarde);
+        asmuo.setPavarde(pavarde);
         yra_pavarde = true;   
 
-        for (char c : asmuo.pavarde) {
+        for (char c : asmuo.getPavarde()) {
             if (!std::isalpha(c)) {
                 yra_pavarde = false;
                 std::cout << "\nPavarde gali sudaryti tik raides!\n";
@@ -150,7 +56,7 @@ void duomenu_suvedimas(studentas& asmuo){
                 break;
             }
         }
-        if(asmuo.pavarde.length() < 1 || asmuo.pavarde.length() > 20){
+        if(asmuo.getPavarde().length() < 1 || asmuo.getPavarde().length() > 20){
             std::cout << "\nPavarde gali tureti tik 1-20 raidziu!\n";
             std::cout << "Pavarde: ";
         }
@@ -169,9 +75,9 @@ void duomenu_suvedimas(studentas& asmuo){
     std::cout << std::endl;
 
     if(ivestis == "random"){
-        atsitiktiniu_reiksmiu_generavimas(asmuo);
-        galutinio_balo_skaiciavimas(asmuo);
-        medianos_skaiciavimas(asmuo);
+        asmuo.atsitiktiniu_reiksmiu_generavimas(asmuo);
+        asmuo.galutinio_balo_skaiciavimas(asmuo);
+        asmuo.medianos_skaiciavimas(asmuo);
         return;
     }
 
@@ -181,29 +87,29 @@ void duomenu_suvedimas(studentas& asmuo){
     std::cout << "[Spausk raide, kad baigti ivedima]\n";
     std::cout << "Studento pazymiai: ";
 
-    pazymiu_suvedimas(asmuo);
-    while(asmuo.pazymiai.size() == 0){
+    asmuo.pazymiu_suvedimas(asmuo);
+    while(asmuo.getPazymiai().size() == 0){
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         std::cout << "Turite ivesti bent viena pazymi:";
-        pazymiu_suvedimas(asmuo);
+        asmuo.pazymiu_suvedimas(asmuo);
     }
 
 // Rodomi įvesti pažymiai. Kviečiama funkcija, kur reikės įvesti egzamino balą.
 // Bei kviečiamos funkcijos, kur apskaičiuos galutinį balą, bei medianą.
 
     std::cout << "\nIvesti pazymiai: ";
-        for(int t=0;t < asmuo.pazymiai.size(); t++){
-            std::cout << asmuo.pazymiai[t] << " ";
+        for(int t=0;t < asmuo.getPazymiai().size(); t++){
+            std::cout << asmuo.getPazymiai()[t] << " ";
         }
 
     std::cout << std::endl;
     std::cin.clear();
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-    egzamino_suvedimas(asmuo);
-    galutinio_balo_skaiciavimas(asmuo);
-    medianos_skaiciavimas(asmuo);
+    asmuo.egzamino_suvedimas(asmuo);
+    asmuo.galutinio_balo_skaiciavimas(asmuo);
+    asmuo.medianos_skaiciavimas(asmuo);
     std::cout << "-------------------------------------\n\n";
 };
 
@@ -215,9 +121,9 @@ void vidurkio_vaizdavimas(std::vector<studentas> &sarasas){
     for (const auto& asmuo : sarasas) {
 
         std::cout << std::fixed << std::setprecision(2);
-        std::cout << std::setw(21) << std::left << asmuo.pavarde;
-        std::cout << std::setw(21) << std::left << asmuo.vardas;
-        std::cout << asmuo.galutinis_balas << '\n';
+        std::cout << std::setw(21) << std::left << asmuo.getPavarde();
+        std::cout << std::setw(21) << std::left << asmuo.getVardas();
+        std::cout << asmuo.getGalutinis_balas() << '\n';
 
     }
     std::cout << "\n";
@@ -231,9 +137,9 @@ void medianos_vaizdavimas(std::vector<studentas> &sarasas){
     for (const auto& asmuo : sarasas) {
 
         std::cout << std::fixed << std::setprecision(2);
-        std::cout << std::setw(21) << std::left << asmuo.pavarde;
-        std::cout << std::setw(21) << std::left << asmuo.vardas;
-        std::cout << asmuo.mediana << '\n';
+        std::cout << std::setw(21) << std::left << asmuo.getPavarde();
+        std::cout << std::setw(21) << std::left << asmuo.getVardas();
+        std::cout << asmuo.getMediana() << '\n';
 
     }
     std::cout << "\n";
@@ -313,14 +219,6 @@ std::string irasymo_pasirinkimas(){
     return ivestis;
 };
 
-bool pavardes_rusiavimas(const studentas& asmuo1, const studentas& asmuo2){
-    return asmuo1.pavarde < asmuo2.pavarde;
-};
-
-bool galutinio_balo_rusiavimas(const studentas& asmuo1, const studentas& asmuo2){
-    return asmuo1.galutinis_balas > asmuo2.galutinis_balas;
-};
-
 void failo_irasymas_paprastai(const std::string& failo_pavadinimas, const std::vector<studentas>& sarasas) {
 
     std::ostringstream buferis;
@@ -331,10 +229,10 @@ void failo_irasymas_paprastai(const std::string& failo_pavadinimas, const std::v
     for (const auto& asmuo : sarasas) {
         buferis << std::fixed << std::setprecision(2);
 
-        buferis << std::setw(21) << std::left << asmuo.pavarde;
-        buferis << std::setw(21) << std::left << asmuo.vardas;
-        buferis << std::setw(24) << std::left << asmuo.galutinis_balas;
-        buferis << asmuo.mediana << '\n';
+        buferis << std::setw(21) << std::left << asmuo.getPavarde();
+        buferis << std::setw(21) << std::left << asmuo.getVardas();
+        buferis << std::setw(24) << std::left << asmuo.getGalutinis_balas();
+        buferis << asmuo.getMediana() << '\n';
     }
 
     const std::string& isvedimo_string = buferis.str();
@@ -398,15 +296,15 @@ void failo_studento_nuskaitymas(std::string failo_pavadinimas){
         for(int j = 0; j < n ; j++){
         
             if(j == 0){
-                temp.vardas = result[j];
+                temp.setVardas(result[j]);
             }
             else if(j == 1){
-                temp.pavarde = result[j];
+                temp.setPavarde(result[j]);
             }
             else if(j > 1 && j < n - 1){
                 try{
                     int reiksme = std::stoi(result[j]);
-                    temp.pazymiai.push_back(reiksme);
+                    temp.setPazymiai(reiksme);
                 }
                 catch (const std::invalid_argument& e) {
                     continue;
@@ -415,15 +313,15 @@ void failo_studento_nuskaitymas(std::string failo_pavadinimas){
             else if(j == n - 1){
                 try{
                 int reiksme = std::stoi(result[j]);
-                temp.egzaminas = reiksme;
+                temp.setEgzaminas(reiksme);
                 }
                 catch (const std::invalid_argument& e) {
-                    temp.egzaminas = 0;
+                    temp.setEgzaminas(0);
                 }
             }   
         }
-        galutinio_balo_skaiciavimas(temp);
-        medianos_skaiciavimas(temp);
+        temp.galutinio_balo_skaiciavimas(temp);
+        temp.medianos_skaiciavimas(temp);
         asmenys.push_back(temp);
     }
     auto end_sutvarkyti_duomenys = std::chrono::high_resolution_clock::now();
@@ -472,7 +370,7 @@ void failo_nuskaitymas(std::string pasirinkimas){
 
     auto start_sort = std::chrono::high_resolution_clock::now(); auto st5=start_sort;
 
-    std::sort(asmenys.begin(), asmenys.end(), galutinio_balo_rusiavimas);
+    std::sort(asmenys.begin(), asmenys.end(), studentas::galutinio_balo_rusiavimas);
 
      auto end_sort = std::chrono::high_resolution_clock::now();
      std::chrono::duration<double> diff_sort = end_sort-start_sort;
@@ -497,7 +395,7 @@ void failo_nuskaitymas(std::string pasirinkimas){
 
             for(int i =0; i < asmenys.size();i++){
 
-                if(asmenys[i].galutinis_balas >= 5.0){
+                if(asmenys[i].getGalutinis_balas() >= 5.0){
                     asmenys_kietakai.push_back(asmenys[i]);
                 }
                 else{
@@ -510,15 +408,15 @@ void failo_nuskaitymas(std::string pasirinkimas){
 // std::copy_if naudojamas
         else if(pasirinkimas == "2"){
             std::copy_if(asmenys.begin(), asmenys.end(), std::back_inserter(asmenys_kietakai),
-            [](const studentas& stud) { return stud.galutinis_balas >= 5.0; });
+            [](const studentas& stud) { return stud.getGalutinis_balas() >= 5.0; });
 
             std::copy_if(asmenys.begin(), asmenys.end(), std::back_inserter(asmenys_vargsiukai),
-            [](const studentas& stud) { return stud.galutinis_balas < 5.0; });
+            [](const studentas& stud) { return stud.getGalutinis_balas() < 5.0; });
         }
     // ištrina bendrą vektorių, kadangi nebenaudojame
 
         for(int i = 0; i < asmenys.size();i++){
-            asmenys[i].pazymiai.clear();
+            asmenys[i].getPazymiai().clear();
         }
         asmenys.clear();
 
@@ -553,7 +451,7 @@ void failo_nuskaitymas(std::string pasirinkimas){
 
             for(int i = vektoriaus_dydis - 1 ;i >= 0;i--){
 
-                if(asmenys[i].galutinis_balas >= 5.0){
+                if(asmenys[i].getGalutinis_balas() >= 5.0){
                     continue;
                 }
                 else{
@@ -567,7 +465,7 @@ void failo_nuskaitymas(std::string pasirinkimas){
         else if(pasirinkimas == "4"){
 
             auto iteratorius = std::partition(asmenys.begin(), asmenys.end(), [](const studentas& asmuo) {
-            return asmuo.galutinis_balas >= 5.0;
+            return asmuo.getGalutinis_balas() >= 5.0;
             });
 
             for (auto i = iteratorius; i != asmenys.end(); ++i) {
@@ -580,7 +478,7 @@ void failo_nuskaitymas(std::string pasirinkimas){
         else if(pasirinkimas == "5"){
 
             auto iteratorius = std::remove_if(asmenys.begin(), asmenys.end(), [](const studentas& asmuo) {
-            return asmuo.galutinis_balas >= 5.0;
+            return asmuo.getGalutinis_balas() >= 5.0;
             });
 
             asmenys_vargsiukai.insert(asmenys_vargsiukai.begin(), iteratorius, asmenys.end());

@@ -1,10 +1,6 @@
-main: functions_vector.o
-	g++ -O3 -o main_vector main_vector.cpp functions_vector.o
-list: functions_list.o
-	g++ -O3 -o main_list main_list.cpp functions_list.o
-deque: functions_deque.o
-	g++ -march=native -o main_deque main_deque.cpp functions_deque.o
+main: functions_vector.o student.o
+	g++ -O3 -o main_vector main_vector.cpp functions_vector.o student.o
 clean:
-	rm *.o main_vector main_list main_deque
+	rm *.o main_vector
 rez:
 	rm *.txt

@@ -45,7 +45,12 @@ class studentas {
         static bool pavardes_rusiavimas(const studentas& asmuo1, const studentas& asmuo2);
         static bool galutinio_balo_rusiavimas(const studentas& asmuo1, const studentas& asmuo2);
 
-    studentas();
+    studentas(){};
+    studentas(std::string Vardas, std::string Pavarde, std::vector<int> Pazymiai, int Egzaminas, double Galutinis_balas, double Mediana);
+    studentas(const studentas& asmuo_kopijuojamas);
+    studentas& operator=(const studentas& asmuo_kopijuojamas);
+    studentas(studentas&& asmuo_perkeliamas);
+    studentas& operator=(studentas&& asmuo_perkeliamas);
     ~studentas();
 };
 

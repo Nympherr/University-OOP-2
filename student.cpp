@@ -124,13 +124,67 @@ void studentas::egzamino_suvedimas(studentas& asmuo){
     }
 };
 
-studentas::studentas() {
-    vardas = "";
-    pavarde = "";
-    egzaminas = 0;
-    galutinis_balas = 0;
-    mediana = 0;
+studentas::studentas(std::string Vardas = "", std::string Pavarde = "", std::vector<int> Pazymiai = {}, int Egzaminas = 0, double Galutinis_Balas = 0, double Mediana = 0) {
+    vardas = Vardas;
+    pavarde = Pavarde;
+    pazymiai = Pazymiai;
+    egzaminas = Egzaminas;
+    galutinis_balas = Galutinis_Balas;
+    mediana = Mediana;
 };
+
+studentas::studentas(const studentas& asmuo_kopijuojamas) {
+    vardas = asmuo_kopijuojamas.vardas;
+    pavarde = asmuo_kopijuojamas.pavarde;
+    pazymiai = asmuo_kopijuojamas.pazymiai;
+    egzaminas = asmuo_kopijuojamas.egzaminas;
+    galutinis_balas = asmuo_kopijuojamas.galutinis_balas;
+    mediana = asmuo_kopijuojamas.mediana;
+}
+
+studentas& studentas::operator=(const studentas& asmuo_kopijuojamas) {
+    if (this == &asmuo_kopijuojamas) {
+        return *this; 
+    }
+    vardas = asmuo_kopijuojamas.vardas;
+    pavarde = asmuo_kopijuojamas.pavarde;
+    pazymiai = asmuo_kopijuojamas.pazymiai;
+    egzaminas = asmuo_kopijuojamas.egzaminas;
+    galutinis_balas = asmuo_kopijuojamas.galutinis_balas;
+    mediana = asmuo_kopijuojamas.mediana;
+    return *this;
+};
+
+studentas::studentas(studentas&& asmuo_perkeliamas) {
+    vardas = std::move(asmuo_perkeliamas.vardas);
+    pavarde = std::move(asmuo_perkeliamas.pavarde);
+    pazymiai = std::move(asmuo_perkeliamas.pazymiai);
+    egzaminas = asmuo_perkeliamas.egzaminas;
+    galutinis_balas = asmuo_perkeliamas.galutinis_balas;
+    mediana = asmuo_perkeliamas.mediana;
+
+    asmuo_perkeliamas.egzaminas = 0;
+    asmuo_perkeliamas.galutinis_balas = 0;
+    asmuo_perkeliamas.mediana = 0;
+};
+
+studentas& studentas::operator=(studentas&& asmuo_perkeliamas) {
+
+    if (this != &asmuo_perkeliamas) {
+        vardas = std::move(asmuo_perkeliamas.vardas);
+        pavarde = std::move(asmuo_perkeliamas.pavarde);
+        pazymiai = std::move(asmuo_perkeliamas.pazymiai);
+        egzaminas = asmuo_perkeliamas.egzaminas;
+        galutinis_balas = asmuo_perkeliamas.galutinis_balas;
+        mediana = asmuo_perkeliamas.mediana;
+
+        asmuo_perkeliamas.egzaminas = 0;
+        asmuo_perkeliamas.galutinis_balas = 0;
+        asmuo_perkeliamas.mediana = 0;
+    }
+
+    return *this;
+}
 
 studentas::~studentas() {
     this->pazymiai.clear();

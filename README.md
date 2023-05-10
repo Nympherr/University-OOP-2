@@ -1,13 +1,13 @@
-# Versija V1.2
-***Aštuntoji objektinio programavimo užduoties dalis.***
+# Versija V1.5
+***Devintoji objektinio programavimo užduoties dalis.***
 
 <h2>Ką programa daro?</h2>
 
 Programa leidžia įrašyti studentus, jų pažymius, egzamino rezultatą ir paskaičiuoti galutinį rezultatą bei jį atvaizduoti vidurkio arba medianos pavidalu. Galima duomenis įrašyti savarankiškai arba nuskaityti iš failo. Yra galimybė sugeneruoti failą nuo nulio pagal savo pasirinktus parametrus. Nuskaityto failo atveju rezultatas bus sugeneruojamas naujuose failuose.
 
-<h2>Kaip programa pasikeitė nuo praeitos versijos?(V1.1 -> V1.2)</h2>
+<h2>Kaip programa pasikeitė nuo praeitos versijos?(V1.2 -> V1.5)</h2>
 
-Implementuota "Rule of five ". Kopijavimo konstruktorius, kopijavimo priskyrimo operatorius, "move" konstruktorius, "move" priskyrimo operatorius.
+Implementuota abstrakti žmogaus klasė. Studento klasė dabar yra išvestinė iš žmogaus klasės.
 
 <h2>Kaip paleisti šią programą? / Įdiegimo instrukcija (su Makefile)</h2>
 
@@ -69,11 +69,9 @@ Ką vertėtų žinoti:
 
 <h2>Patirti sunkumai šioje versijoje:</h2>
 
-Didelių sunkumų šį kartą nebuvo patirta.
+Sunkumų nebuvo.
 
 <h2>Ką išmokau šioje versijoje:</h2>
 
-1) Kas iš viso yra "rule of five", kam jis reikalingas, kur naudojamas.
-2) Gilesnės žinios apie operatorių persidengimą.
-3) Kodėl svarbus testavimas
-4) Daugiau informacijos apie konstruktorius.
+1) sužinojau kas yra virtuali funkcija, visiškai virtuali funkcija, abstrakti klasė.
+2) sužinojau kam abstrakčios klasės yra reikalingos.

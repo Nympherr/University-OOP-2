@@ -11,12 +11,43 @@
 #include <vector>
 #include <fstream>
 #include <chrono>
- 
-class studentas {
+
+class zmogus{
+
+    private:
+        std::string vardas, pavarde;
+
+    public:
+
+        inline std::string getVardas() const { return vardas; }
+        inline std::string getPavarde() const { return pavarde; }
+
+        void setVardas(const std::string& vardas);
+        void setPavarde(const std::string& pavarde);
+
+        virtual void informacija() = 0;
+
+        zmogus(){
+            vardas = " ";
+            pavarde = " ";
+        };
+
+        zmogus(std::string Vardas, std::string Pavarde){
+            vardas = Vardas;
+            pavarde = Pavarde;
+        };
+
+        ~zmogus(){
+            vardas.clear();
+            pavarde.clear();
+        };
+    
+};
+
+class studentas:public zmogus {
 
     private:
 
-        std::string vardas, pavarde;
         std::vector<int> pazymiai;
         int egzaminas;
         double galutinis_balas, mediana;
@@ -24,16 +55,13 @@ class studentas {
     public:
 
         // Getteriai
-        inline std::string getVardas() const { return vardas; }
-        inline std::string getPavarde() const { return pavarde; }
         std::vector<int> getPazymiai() const { return pazymiai; }
         int getEgzaminas() const { return egzaminas; }
         double getGalutinis_balas() const { return galutinis_balas; }
         double getMediana() const { return mediana; }
+        void informacija();
 
         // Setteriai
-        void setVardas(const std::string& vardas);
-        void setPavarde(const std::string& pavarde);
         void setPazymiai(const int& pazymys);
         void setEgzaminas(const int& egzaminas);
 

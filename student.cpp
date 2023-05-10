@@ -1,11 +1,16 @@
 #include "functions_vector.h"
 
-void studentas::setVardas(const std::string& vardas) {
+void zmogus::setVardas(const std::string& vardas) {
     this->vardas = vardas;
 };
 
-void studentas::setPavarde(const std::string& pavarde) {
+void zmogus::setPavarde(const std::string& pavarde) {
     this->pavarde = pavarde;
+};
+
+void studentas::informacija(){
+    std::cout << "Žmogaus vardas: " << getVardas() << std::endl;
+    std::cout << "Žmogaus pavardė: " << getPavarde() << std::endl;
 };
 
 void studentas::setPazymiai(const int& pazymys) {
@@ -125,8 +130,8 @@ void studentas::egzamino_suvedimas(studentas& asmuo){
 };
 
 studentas::studentas(std::string Vardas = "", std::string Pavarde = "", std::vector<int> Pazymiai = {}, int Egzaminas = 0, double Galutinis_Balas = 0, double Mediana = 0) {
-    vardas = Vardas;
-    pavarde = Pavarde;
+    setVardas(Vardas);
+    setPavarde(Pavarde);
     pazymiai = Pazymiai;
     egzaminas = Egzaminas;
     galutinis_balas = Galutinis_Balas;
@@ -134,8 +139,8 @@ studentas::studentas(std::string Vardas = "", std::string Pavarde = "", std::vec
 };
 
 studentas::studentas(const studentas& asmuo_kopijuojamas) {
-    vardas = asmuo_kopijuojamas.vardas;
-    pavarde = asmuo_kopijuojamas.pavarde;
+    setVardas(asmuo_kopijuojamas.getVardas());
+    setPavarde(asmuo_kopijuojamas.getPavarde());
     pazymiai = asmuo_kopijuojamas.pazymiai;
     egzaminas = asmuo_kopijuojamas.egzaminas;
     galutinis_balas = asmuo_kopijuojamas.galutinis_balas;
@@ -146,8 +151,8 @@ studentas& studentas::operator=(const studentas& asmuo_kopijuojamas) {
     if (this == &asmuo_kopijuojamas) {
         return *this; 
     }
-    vardas = asmuo_kopijuojamas.vardas;
-    pavarde = asmuo_kopijuojamas.pavarde;
+    setVardas(asmuo_kopijuojamas.getVardas());
+    setPavarde(asmuo_kopijuojamas.getPavarde());
     pazymiai = asmuo_kopijuojamas.pazymiai;
     egzaminas = asmuo_kopijuojamas.egzaminas;
     galutinis_balas = asmuo_kopijuojamas.galutinis_balas;
@@ -156,8 +161,8 @@ studentas& studentas::operator=(const studentas& asmuo_kopijuojamas) {
 };
 
 studentas::studentas(studentas&& asmuo_perkeliamas) {
-    vardas = std::move(asmuo_perkeliamas.vardas);
-    pavarde = std::move(asmuo_perkeliamas.pavarde);
+    setVardas(std::move(asmuo_perkeliamas.getVardas()));
+    setPavarde(std::move(asmuo_perkeliamas.getPavarde()));
     pazymiai = std::move(asmuo_perkeliamas.pazymiai);
     egzaminas = asmuo_perkeliamas.egzaminas;
     galutinis_balas = asmuo_perkeliamas.galutinis_balas;
@@ -171,8 +176,8 @@ studentas::studentas(studentas&& asmuo_perkeliamas) {
 studentas& studentas::operator=(studentas&& asmuo_perkeliamas) {
 
     if (this != &asmuo_perkeliamas) {
-        vardas = std::move(asmuo_perkeliamas.vardas);
-        pavarde = std::move(asmuo_perkeliamas.pavarde);
+        setVardas(std::move(asmuo_perkeliamas.getVardas()));
+        setPavarde(std::move(asmuo_perkeliamas.getPavarde()));
         pazymiai = std::move(asmuo_perkeliamas.pazymiai);
         egzaminas = asmuo_perkeliamas.egzaminas;
         galutinis_balas = asmuo_perkeliamas.galutinis_balas;

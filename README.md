@@ -45,6 +45,8 @@ Paleidus programą  ant ekrano matysite galimas operacijas su numeriu prie kiekv
 
 6) coolBoys.txt - po failų nuskaitymo atsirandantis failas, kur kiekvieno studento galutinis balas yra didesnis arba lygus 5
 
+7) Norint atlikti unit testing reikės atsisiųsti catch2.hpp failą ir įmesti jį į "testavimas" direktoriją. testas.cpp failą sukompiliuoti kartu su student.cpp
+
 <h2>Visos funkcijos:</h2>
 
 1) Įrašyti n skaičių studentų ( vardas, pavardė )
@@ -74,6 +76,8 @@ Paleidus programą  ant ekrano matysite galimas operacijas su numeriu prie kiekv
 ## V2.0
 
 * Įkelta Doxygen dokumentacija
+
+* Paprastas Unit Testing. (Su catch2 biblioteka)
 
 ---
 

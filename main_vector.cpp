@@ -1,4 +1,4 @@
-// v1.5 versijos programa
+// v2.0 versijos programa
 
 #include "functions_vector.h"
 

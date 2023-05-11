@@ -10,6 +10,10 @@ Programa leidžia įrašyti studentus, jų pažymius, egzamino rezultatą ir pas
 (turėkite direktorijoje visus failus!)
 (pagrindinėje direktorijoje susikurkite "failai" direktoriją)
 
+ARBA
+
+Paleiskite "setup" failą ir įsidiekite kur tik norite. Gautą failą "program" paleiskite (per terminalą) ir viskas turėtų veikti
+
 <h4>Kad sukurti programos paleidžiamąjį failą su Makefile, terminale įrašykite: (be kabučių)</h4>
 
 * "make"
@@ -78,6 +82,8 @@ Paleidus programą  ant ekrano matysite galimas operacijas su numeriu prie kiekv
 * Įkelta Doxygen dokumentacija
 
 * Paprastas Unit Testing. (Su catch2 biblioteka)
+
+* Įdėtas automatinio įdiegimo "setup" failas
 
 ---
 

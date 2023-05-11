@@ -97,6 +97,8 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <p>Programa leidžia įrašyti studentus, jų pažymius, egzamino rezultatą ir paskaičiuoti galutinį rezultatą bei jį atvaizduoti vidurkio arba medianos pavidalu. Galima duomenis įrašyti savarankiškai arba nuskaityti iš failo. Yra galimybė sugeneruoti failą nuo nulio pagal savo pasirinktus parametrus. Nuskaityto failo atveju rezultatas bus sugeneruojamas naujuose failuose.</p>
 <h2>Kaip paleisti šią programą? / Įdiegimo instrukcija (su Makefile)</h2>
 <p>(turėkite direktorijoje visus failus!) (pagrindinėje direktorijoje susikurkite "failai" direktoriją)</p>
+<p>ARBA</p>
+<p>Paleiskite "setup" failą ir įsidiekite kur tik norite. Gautą failą "program" paleiskite (per terminalą) ir viskas turėtų veikti</p>
 <h4>Kad sukurti programos paleidžiamąjį failą su Makefile, terminale įrašykite: (be kabučių)</h4>
 <ul>
 <li>"make"</li>
@@ -118,6 +120,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <p>5) Sugeneruoti nauji failai atsiranda tokiu pavidalu: "studentai" + skaičius .txt (skaičius reiškia kiek studentų faile yra)</p>
 <p>6) badBoys.txt - po failų nuskaitymo atsirandantis failas, kur kiekvieno studento galutinis balas yra žemesnis nei 5</p>
 <p>6) coolBoys.txt - po failų nuskaitymo atsirandantis failas, kur kiekvieno studento galutinis balas yra didesnis arba lygus 5</p>
+<p>7) Norint atlikti unit testing reikės atsisiųsti catch2.hpp failą ir įmesti jį į "testavimas" direktoriją. testas.cpp failą sukompiliuoti kartu su <a class="el" href="student_8cpp.html">student.cpp</a></p>
 <h2>Visos funkcijos:</h2>
 <p>1) Įrašyti n skaičių studentų ( vardas, pavardė )</p>
 <p>2) Įvesti savarankiškai m skaičių pažymių ( dešimtbalėje sistemoje )</p>
@@ -135,6 +138,8 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 V2.0</h1>
 <ul>
 <li>Įkelta Doxygen dokumentacija</li>
+<li>Paprastas Unit Testing. (Su catch2 biblioteka)</li>
+<li>Įdėtas automatinio įdiegimo "setup" failas</li>
 </ul>
 <hr  />
 <h1><a class="anchor" id="autotoc_md4"></a>
